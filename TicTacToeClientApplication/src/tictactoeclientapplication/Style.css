@@ -1,0 +1,92 @@
+#computerButton{
+	-fx-font:bold 2em Cooper;
+	-fx-background-color: #D36779;
+	-fx-background-radius: 30px;
+        -fx-text-fill: #ffffff;    
+}
+#localButton{
+	-fx-font:bold 2em Cooper;
+	-fx-background-color: #9388DF;
+	-fx-background-radius: 30px;
+        -fx-text-fill: #ffffff;    
+}
+#onlineButton{
+	-fx-font:bold 2em Cooper;
+	-fx-background-color: #8EE381;
+	-fx-background-radius: 30px;
+        -fx-text-fill: #ffffff;     
+}
+#pane{    
+        
+        -fx-alignment: center;
+        -fx-hgap: 100;
+        -fx-font:bold 2em Cooper;
+        -fx-text-fill: #ffffff; 
+}
+#gridPane{
+    -fx-background-color: #E4D5D5;
+    -fx-alignment: center;
+    -fx-vgap: 10;
+    -fx-hgap: 10;
+    
+}
+#buttonXO{
+    -fx-font:bold 2em Cooper;
+    -fx-background-color: #D36779;
+    -fx-background-radius: 10px;
+   
+    
+}
+#buttonXO:hover{
+    -fx-background-color: #FFED00;
+}
+
+#computerButton{
+	-fx-font:bold 2em "Snap ITC";
+	-fx-background-color: #D36779;
+	-fx-background-radius: 30px;
+        -fx-text-fill: #ffffff;    
+}
+#localButton{
+	-fx-font:bold 2em "Snap ITC";
+	-fx-background-color: #9388DF;
+	-fx-background-radius: 30px;
+        -fx-text-fill: #ffffff;    
+}
+#onlineButton{
+	-fx-font:bold 2em "Snap ITC";
+	-fx-background-color: #8EE381;
+	-fx-background-radius: 30px;
+        -fx-text-fill: #ffffff;     
+}
+#pane{    
+        -fx-background-color: #E4D5D5;
+        -fx-alignment: center;
+        -fx-vgap: 20;
+}
+
+
+#item{
+	-fx-font:bold 2em "Snap ITC";
+	-fx-background-color: #D36779;
+	-fx-background-radius: 30px;
+        -fx-text-fill: #ffffff;    
+}
+
+
+#buttonChallenge{
+    -fx-font:bold 1em "Cooper Black";
+    -fx-background-color: #E4D5D5;
+    -fx-background-radius: 10px;
+    -fx-pref-width: 200px;  /* Set the preferred width */
+    -fx-pref-height: 30px;
+   
+    
+}
+#buttonChallenge:hover{
+    -fx-background-color: #FFED00;
+}
+
+
+
+
