@@ -194,7 +194,7 @@ public class GameBoardLayout extends BorderPane {
 
         BorderPane pane = new BorderPane();
 
-        File file = new File("F:\\NetBeans\\NavigationApplication\\src\\navigationapplication\\win.mp4");
+        File file = new File("D:\\courses\\Developing Applications using Java SE\\TicTacToe\\TicTacToeClientApplication\\src\\tictactoeclientapplication\\win.mp4");
         Media media = new Media(file.toURI().toString());
         MediaPlayer mp = new MediaPlayer(media);
         MediaView mediaView = new MediaView(mp);
