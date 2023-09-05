@@ -88,5 +88,19 @@
 }
 
 
+#buttondialog{
+    -fx-font:bold 1em "Cooper Black";
+    -fx-background-color: #D36779;
+    -fx-background-radius: 10px;
+    -fx-pref-width: 200px;  /* Set the preferred width */
+    -fx-pref-height: 30px;
+   
+    
+}
+#buttondialog:hover{
+    -fx-background-color: #FFED00;
+}
+
+
 
 

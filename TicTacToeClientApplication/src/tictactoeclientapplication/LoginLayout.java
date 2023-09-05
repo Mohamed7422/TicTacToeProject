@@ -5,19 +5,24 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.effect.ColorAdjust;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 
-public  class LoginLayout extends AnchorPane {
+public class LoginLayout extends BorderPane {
 
+    protected final BorderPane borderPane;
+    protected final AnchorPane anchorPane;
+    protected final HBox hBox;
     protected final Text text;
     protected final FlowPane flowPane;
     protected final Text text0;
-    protected final TextField usernameTextField;
+    protected final TextField userNameBtn;
     protected final Text text1;
-    protected final TextField passwordTextField;
-    protected final Button btnLogin;
+    protected final TextField passwordBtn;
+    protected final Button loginBtn;
     protected final ColorAdjust colorAdjust;
     protected final Text text2;
     protected final Text text3;
@@ -28,13 +33,16 @@ public  class LoginLayout extends AnchorPane {
 
     public LoginLayout(OnNavigation onNav) {
 
+        borderPane = new BorderPane();
+        anchorPane = new AnchorPane();
+        hBox = new HBox();
         text = new Text();
         flowPane = new FlowPane();
         text0 = new Text();
-        usernameTextField = new TextField();
+        userNameBtn = new TextField();
         text1 = new Text();
-        passwordTextField = new TextField();
-        btnLogin = new Button();
+        passwordBtn = new TextField();
+        loginBtn = new Button();
         colorAdjust = new ColorAdjust();
         text2 = new Text();
         text3 = new Text();
@@ -43,14 +51,21 @@ public  class LoginLayout extends AnchorPane {
         btnGuest = new Button();
         colorAdjust1 = new ColorAdjust();
 
-        setId("AnchorPane");
-        setPrefHeight(400.0);
-        setPrefWidth(600.0);
-        setStyle("-fx-background-color: #E4D5D5;");
+        BorderPane.setAlignment(borderPane, javafx.geometry.Pos.CENTER);
+        borderPane.setStyle("-fx-background-color: #E4D5D5;");
+
+        BorderPane.setAlignment(anchorPane, javafx.geometry.Pos.CENTER);
+        anchorPane.setId("AnchorPane");
+        anchorPane.setMaxHeight(USE_PREF_SIZE);
+        anchorPane.setMaxWidth(USE_PREF_SIZE);
+        anchorPane.setMinHeight(USE_PREF_SIZE);
+        anchorPane.setMinWidth(USE_PREF_SIZE);
+        anchorPane.setStyle("-fx-background-color: #E4D5D5;");
+
+        hBox.setLayoutX(214.0);
+        hBox.setLayoutY(35.0);
 
         text.setFill(javafx.scene.paint.Color.valueOf("#a94064"));
-        text.setLayoutX(244.0);
-        text.setLayoutY(64.0);
         text.setStrokeType(javafx.scene.shape.StrokeType.OUTSIDE);
         text.setStrokeWidth(0.0);
         text.setText("LOGIN");
@@ -70,10 +85,10 @@ public  class LoginLayout extends AnchorPane {
         text0.setWrappingWidth(128.716796875);
         text0.setFont(new Font("Snap ITC", 18.0));
 
-        usernameTextField.setPrefHeight(25.0);
-        usernameTextField.setPrefWidth(319.0);
-        usernameTextField.setStyle("-fx-background-radius: 30;");
-        FlowPane.setMargin(usernameTextField, new Insets(10.0, 0.0, 0.0, 15.0));
+        userNameBtn.setPrefHeight(25.0);
+        userNameBtn.setPrefWidth(319.0);
+        userNameBtn.setStyle("-fx-background-radius: 30;");
+        FlowPane.setMargin(userNameBtn, new Insets(0.0, 0.0, 0.0, 15.0));
 
         text1.setFill(javafx.scene.paint.Color.valueOf("#a94064"));
         text1.setLayoutX(10.0);
@@ -85,28 +100,29 @@ public  class LoginLayout extends AnchorPane {
         text1.setFont(new Font("Snap ITC", 18.0));
         FlowPane.setMargin(text1, new Insets(20.0, 0.0, 0.0, 0.0));
 
-        passwordTextField.setLayoutX(133.0);
-        passwordTextField.setLayoutY(10.0);
-        passwordTextField.setPrefHeight(25.0);
-        passwordTextField.setPrefWidth(319.0);
-        passwordTextField.setStyle("-fx-background-radius: 30;");
-        FlowPane.setMargin(passwordTextField, new Insets(30.0, 0.0, 0.0, 20.0));
+        passwordBtn.setLayoutX(133.0);
+        passwordBtn.setLayoutY(10.0);
+        passwordBtn.setPrefHeight(25.0);
+        passwordBtn.setPrefWidth(319.0);
+        passwordBtn.setStyle("-fx-background-radius: 30;");
+        FlowPane.setMargin(passwordBtn, new Insets(30.0, 0.0, 0.0, 20.0));
 
-        btnLogin.setLayoutX(226.0);
-        btnLogin.setLayoutY(234.0);
-        btnLogin.setMnemonicParsing(false);
-        btnLogin.setPrefHeight(44.0);
-        btnLogin.setPrefWidth(148.0);
-        btnLogin.setStyle("-fx-background-color: #a94064; -fx-background-radius: 30;");
-        btnLogin.getStyleClass().add("-fx-background-color: #20B2AA;-fx-background-radius: 15px;-fx-text-fill: #ffffff;");
-        btnLogin.setText("Login");
-        btnLogin.setTextFill(javafx.scene.paint.Color.WHITE);
-        btnLogin.setFont(new Font("Snap ITC", 20.0));
-        btnLogin.setOnAction(e->{
+        loginBtn.setLayoutX(226.0);
+        loginBtn.setLayoutY(234.0);
+        loginBtn.setMnemonicParsing(false);
+        loginBtn.setPrefHeight(44.0);
+        loginBtn.setPrefWidth(148.0);
+        loginBtn.setStyle("-fx-background-color: #a94064; -fx-background-radius: 30;");
+        loginBtn.getStyleClass().add("-fx-background-color: #20B2AA;-fx-background-radius: 15px;-fx-text-fill: #ffffff;");
+        loginBtn.setText("Login");
+        loginBtn.setTextFill(javafx.scene.paint.Color.WHITE);
+        loginBtn.setFont(new Font("Snap ITC", 20.0));
+
+        loginBtn.setOnAction(e -> {
             onNav.onNavClick("home");
         });
 
-        btnLogin.setEffect(colorAdjust);
+        loginBtn.setEffect(colorAdjust);
 
         text2.setLayoutX(131.0);
         text2.setLayoutY(338.0);
@@ -132,10 +148,10 @@ public  class LoginLayout extends AnchorPane {
         btnSignUp.setText("SignUp");
         btnSignUp.setTextFill(javafx.scene.paint.Color.valueOf("#a94064"));
         btnSignUp.setFont(new Font("Snap ITC", 20.0));
-        btnSignUp.setOnAction(e->{
+
+        btnSignUp.setOnAction(e -> {
             onNav.onNavClick("sign up");
         });
-
         btnSignUp.setEffect(colorAdjust0);
 
         btnGuest.setLayoutX(194.0);
@@ -148,23 +164,25 @@ public  class LoginLayout extends AnchorPane {
         btnGuest.setText("Continue As A Guest");
         btnGuest.setTextFill(javafx.scene.paint.Color.valueOf("#a94064"));
         btnGuest.setFont(new Font("Snap ITC", 20.0));
-        btnGuest.setOnAction(e->{
+        btnGuest.setOnAction(e -> {
             onNav.onNavClick("home");
         });
-
         btnGuest.setEffect(colorAdjust1);
+        borderPane.setCenter(anchorPane);
+        setCenter(borderPane);
 
-        getChildren().add(text);
+        hBox.getChildren().add(text);
+        anchorPane.getChildren().add(hBox);
         flowPane.getChildren().add(text0);
-        flowPane.getChildren().add(usernameTextField);
+        flowPane.getChildren().add(userNameBtn);
         flowPane.getChildren().add(text1);
-        flowPane.getChildren().add(passwordTextField);
-        getChildren().add(flowPane);
-        getChildren().add(btnLogin);
-        getChildren().add(text2);
-        getChildren().add(text3);
-        getChildren().add(btnSignUp);
-        getChildren().add(btnGuest);
+        flowPane.getChildren().add(passwordBtn);
+        anchorPane.getChildren().add(flowPane);
+        anchorPane.getChildren().add(loginBtn);
+        anchorPane.getChildren().add(text2);
+        anchorPane.getChildren().add(text3);
+        anchorPane.getChildren().add(btnSignUp);
+        anchorPane.getChildren().add(btnGuest);
 
     }
 }

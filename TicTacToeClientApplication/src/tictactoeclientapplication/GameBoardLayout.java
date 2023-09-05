@@ -1,6 +1,7 @@
 package tictactoeclientapplication;
 
 import com.sun.deploy.ui.CacheUpdateProgressDialog;
+import java.io.File;
 import java.time.Duration;
 import javafx.animation.FadeTransition;
 import javafx.animation.Interpolator;
@@ -13,6 +14,7 @@ import javafx.geometry.Insets;
 import static javafx.geometry.Orientation.HORIZONTAL;
 import static javafx.geometry.Orientation.VERTICAL;
 import javafx.geometry.Pos;
+import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
@@ -26,6 +28,11 @@ import javafx.scene.layout.CornerRadii;
 
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
+import static javafx.scene.layout.Region.USE_PREF_SIZE;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
+import javafx.scene.media.MediaView;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
@@ -177,26 +184,28 @@ public class GameBoardLayout extends BorderPane {
 
             }
         }
-        display("Do u Want to play Again");
+        //display("Do u Want to play Again");
+        displayDialog();
 
     }
 
-    public void display(String text) {
-
+    void displayDialog() {
         Stage stage = new Stage();
-        //used to ensure that you can only interact with one window at a time.
-        //With the APPLICATION.MODAL setting, once the dialog appears,
-        //you will not be able to interact with any other window till the dialog is closed.
-        stage.initModality(Modality.APPLICATION_MODAL);
 
-        Label label = new Label(text);
+        BorderPane pane = new BorderPane();
 
-        label.prefWidthProperty().bind(stage.widthProperty());
-        label.setAlignment(Pos.CENTER);
-        Button btn = new Button("Play Again");
-        Button btn1 = new Button("Leave");
+        File file = new File("F:\\NetBeans\\NavigationApplication\\src\\navigationapplication\\win.mp4");
+        Media media = new Media(file.toURI().toString());
+        MediaPlayer mp = new MediaPlayer(media);
+        MediaView mediaView = new MediaView(mp);
 
-        btn.setOnAction(e -> {
+        mp.play();
+
+        HBox hBox = new HBox();
+        Button button = new Button();
+        Button button0 = new Button();
+
+        button.setOnAction(e -> {
             for (int col = 0; col < 3; col++) {
                 for (int row = 0; row < 3; row++) {
                     gameBoardButton[col][row].setText("");
@@ -206,16 +215,49 @@ public class GameBoardLayout extends BorderPane {
             }
             stage.close();
         });
-        FlowPane layout = new FlowPane(HORIZONTAL, label, btn, btn1);
-        layout.setHgap(10);
-        layout.setVgap(10);
-        layout.setAlignment(Pos.CENTER);
 
-        Scene scene = new Scene(layout, 400, 100);
+        setMaxHeight(USE_PREF_SIZE);
+        setMaxWidth(USE_PREF_SIZE);
+        setMinHeight(USE_PREF_SIZE);
+        setMinWidth(USE_PREF_SIZE);
+        setPrefHeight(240.0);
+        setPrefWidth(400.0);
+
+        BorderPane.setAlignment(mediaView, javafx.geometry.Pos.CENTER);
+        mediaView.setFitHeight(200.0);
+        mediaView.setFitWidth(400.0);
+        pane.setCenter(mediaView);
+        
+        pane.setStyle("-fx-background-color: #E4D5D5");
+
+        BorderPane.setAlignment(hBox, javafx.geometry.Pos.CENTER);
+        hBox.setAlignment(javafx.geometry.Pos.CENTER);
+        hBox.setPrefHeight(0.0);
+        hBox.setPrefWidth(600.0);
+        hBox.setSpacing(200.0);
+
+        button.setMnemonicParsing(false);
+        button.setText("Play Again");
+        button.setId("buttondialog");
+
+        button0.setMnemonicParsing(false);
+        button0.setText("Leave");
+        BorderPane.setMargin(hBox, new Insets(0.0));
+        hBox.setPadding(new Insets(8.0, 8.0, 8.0, 8.0));
+        pane.setBottom(hBox);
+        button0.setId("buttondialog");
+
+        hBox.getChildren().add(button);
+        hBox.getChildren().add(button0);
+
+        Scene scene = new Scene(pane, 380, 300);
+
+        scene.getStylesheets().add(getClass().getResource("Style.css").toString());
 
         stage.setTitle("Dialog");
         stage.setScene(scene);
         stage.show();
+
     }
 
 }

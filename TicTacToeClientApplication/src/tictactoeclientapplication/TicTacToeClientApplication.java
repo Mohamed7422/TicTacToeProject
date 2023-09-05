@@ -26,7 +26,7 @@ public class TicTacToeClientApplication extends Application implements OnNavigat
         LoginLayout root = new LoginLayout(this);
         //ListViewLayout root = new ListViewLayout();
 
-        Scene scene = new Scene(root);
+        Scene scene = new Scene(root,800,600);
 
         scene.getStylesheets().add(getClass().getResource("Style.css").toString());
 
@@ -45,32 +45,32 @@ public class TicTacToeClientApplication extends Application implements OnNavigat
     public void onNavClick(String des) {
 
         if (des == "sign up") {
-            Scene scene = new Scene(new SignUpLayout(this));
+            Scene scene = new Scene(new SignUpLayout(this),800,600);
             scene.getStylesheets().add(getClass().getResource("Style.css").toString());
             this.stage.setScene(scene);
         } else if (des == "login") {
-            Scene scene = new Scene(new LoginLayout(this));
+            Scene scene = new Scene(new LoginLayout(this),800,600);
             scene.getStylesheets().add(getClass().getResource("Style.css").toString());
             this.stage.setScene(scene);
         } else if (des == "home") {
-            Scene scene = new Scene(new HomeLayout(this));
+            Scene scene = new Scene(new HomeLayout(this),800,600);
             scene.getStylesheets().add(getClass().getResource("Style.css").toString());
             this.stage.setScene(scene);
         } else if (des == "computer") {
-            Scene scene = new Scene(new LevelsLayout(this));
+            Scene scene = new Scene(new LevelsLayout(this),800,600);
             scene.getStylesheets().add(getClass().getResource("Style.css").toString());
             this.stage.setScene(scene);
         } else if (des == "local" || des == "board") {
-            Scene scene = new Scene(new GameBoardLayout());
+            Scene scene = new Scene(new GameBoardLayout(),800,600);
             scene.getStylesheets().add(getClass().getResource("Style.css").toString());
             this.stage.setScene(scene);
         } else if (des == "online") {
             //System.out.println("move to online screen");
-            Scene scene = new Scene(new ListViewLayout(this));
+            Scene scene = new Scene(new ListViewLayout(this),800,600);
             scene.getStylesheets().add(getClass().getResource("Style.css").toString());
             this.stage.setScene(scene);
         } else if (des == "easy") {
-            Scene scene = new Scene(new GameBoardLayout());
+            Scene scene = new Scene(new GameBoardLayout(),800,600);
             scene.getStylesheets().add(getClass().getResource("Style.css").toString());
             this.stage.setScene(scene);
         } else if (des == "meduem") {
