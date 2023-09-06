@@ -13,11 +13,9 @@ public class TicTacToeServer extends Thread {
 
     ServerSocket server;
     Socket waiter;
-    boolean serverFlag;
     ChatHandler chatHandler;
 
     TicTacToeServer() {
-        serverFlag = false;
 
     }
 
@@ -25,11 +23,10 @@ public class TicTacToeServer extends Thread {
         try {
             waiter = new Socket();
             System.out.println("Server has been opened");
-            serverFlag = true;
             server = new ServerSocket(5000);
             while (true) {
                 System.out.println("accepting...");
-                waiter = server.accept();
+                waiter = server.accept();//////
                 chatHandler = new ChatHandler(waiter);
             }
 
@@ -37,16 +34,8 @@ public class TicTacToeServer extends Thread {
             ex.printStackTrace();
         }
     }
-
-//    /*void openServer() {
-//        serverFlag = true;
-//        start();
-//        /*if (serverFlag) {
-//            resume();
-//        } else {
-//            start();
-//        }*/
-//    }
+    
+    
     void closeServer() {
         try {
             if (chatHandler != null) {
@@ -109,6 +98,17 @@ class ChatHandler {
 
     }
 
+    
+    /*void sendToClient(int id,String msg) {
+        for (ChatHandler client : clients) {
+            if(){
+                client.mouth.println("user" + this.id + ": " + msg);
+            }
+            //System.out.println(client.id);
+            
+        }
+    }*/
+    
     void sendToAllClients(String msg) {
         for (ChatHandler client : clients) {
             //System.out.println(client.id);

@@ -1,106 +1,139 @@
-#computerButton{
-	-fx-font:bold 2em Cooper;
-	-fx-background-color: #D36779;
-	-fx-background-radius: 30px;
-        -fx-text-fill: #ffffff;    
+.Pane{
+    -fx-alignment: center;
+    -fx-background-color: #E4D5D5;
+    
+    
 }
-#localButton{
-	-fx-font:bold 2em Cooper;
+.PinkButton{
+    -fx-font:bold 2em "Cooper Black";
+    -fx-background-color: #D36779;
+    -fx-background-radius: 10px;
+    -fx-text-fill: #ffffff
+}
+.PinkButton:hover{
+    -fx-background-color: #D3677970;
+}
+
+.PinkButton:pressed{
+    -fx-background-color: #D36779;
+}
+
+.TextField{
+    -fx-background-color: white;
+    -fx-background-radius: 5px;
+    -fx-border-color: transparent;
+    
+}
+
+.EditableText{
+    -fx-font:bold 2em "Cooper Black";
+    -fx-fill:#D36779;
+}
+
+.PinkText{
+    -fx-font:bold 2em "Cooper Black";
+    -fx-fill:#D36779;
+}
+.PinkTextLarge{
+    -fx-font:bold 4em "Cooper Black";
+    -fx-fill:#D36779;
+}
+
+.BlackText{
+    -fx-font:bold 2em "Cooper Black";
+    -fx-fill:#000000;
+}
+.WhiteText{
+    -fx-font:bold 2em "Cooper Black";
+    -fx-fill:#ffffff;
+}
+
+
+
+.PurpleButton{
+	-fx-font:bold 2em "Cooper Black";
 	-fx-background-color: #9388DF;
-	-fx-background-radius: 30px;
-        -fx-text-fill: #ffffff;    
-}
-#onlineButton{
-	-fx-font:bold 2em Cooper;
-	-fx-background-color: #8EE381;
-	-fx-background-radius: 30px;
-        -fx-text-fill: #ffffff;     
-}
-#pane{    
-        
-        -fx-alignment: center;
-        -fx-hgap: 100;
-        -fx-font:bold 2em Cooper;
+	-fx-background-radius: 10px;
         -fx-text-fill: #ffffff; 
 }
-#gridPane{
+.PurpleButton:hover{
+	-fx-background-color: #9388DF77;
+}
+.PurpleButton:pressed{
+	-fx-background-color: #9388DF;
+}
+.GreenButton{
+	-fx-font:bold 2em "Cooper Black";
+	-fx-background-color: #8EE381;
+	-fx-background-radius: 10px;
+        -fx-text-fill: #ffffff;
+}
+.GreenButton:hover{
+	-fx-background-color: #8EE38187;
+}
+.GreenButton:pressed{
+	-fx-background-color: #8EE381;
+}
+
+.GridPane{
     -fx-background-color: #E4D5D5;
     -fx-alignment: center;
     -fx-vgap: 10;
     -fx-hgap: 10;
-    
 }
-#buttonXO{
-    -fx-font:bold 2em Cooper;
+
+
+.list-view .scroll-bar:vertical {
+    -fx-scale-x: 0;
+}
+
+
+.ListItem{
     -fx-background-color: #D36779;
     -fx-background-radius: 10px;
-   
-    
 }
-#buttonXO:hover{
+
+
+.ChallengeButton{
+	-fx-font:bold 2em "Cooper Black";
+	-fx-background-color: #ffffff;
+	-fx-background-radius: 10px;
+        -fx-text-fill: #D36779;
+}
+.ChallengeButton:hover{
+	-fx-background-color: #FFED00;
+}
+.ChallengeButton:pressed{
+	-fx-background-color: #ffffff;
+}
+
+.OfflineText{
+    -fx-font:bold 2em "Cooper Black";
+    -fx-fill: #FFE6EA8E;
+}
+
+.OnlineText{
+    -fx-font:bold 2em "Cooper Black";
+    -fx-fill: #A0FF91FF;
+}
+
+.IngameText{
+    -fx-font:bold 2em "Cooper Black";
+    -fx-fill: #D5CFFFFF;
+}
+
+
+.YellowButton{
+    -fx-font:bold 2em "Cooper Black";
     -fx-background-color: #FFED00;
-}
-
-#computerButton{
-	-fx-font:bold 2em "Snap ITC";
-	-fx-background-color: #D36779;
-	-fx-background-radius: 30px;
-        -fx-text-fill: #ffffff;    
-}
-#localButton{
-	-fx-font:bold 2em "Snap ITC";
-	-fx-background-color: #9388DF;
-	-fx-background-radius: 30px;
-        -fx-text-fill: #ffffff;    
-}
-#onlineButton{
-	-fx-font:bold 2em "Snap ITC";
-	-fx-background-color: #8EE381;
-	-fx-background-radius: 30px;
-        -fx-text-fill: #ffffff;     
-}
-#pane{    
-        -fx-background-color: #E4D5D5;
-        -fx-alignment: center;
-        -fx-vgap: 20;
-}
-
-
-#item{
-	-fx-font:bold 2em "Snap ITC";
-	-fx-background-color: #D36779;
-	-fx-background-radius: 30px;
-        -fx-text-fill: #ffffff;    
-}
-
-
-#buttonChallenge{
-    -fx-font:bold 1em "Cooper Black";
-    -fx-background-color: #E4D5D5;
     -fx-background-radius: 10px;
-    -fx-pref-width: 200px;  /* Set the preferred width */
-    -fx-pref-height: 30px;
-   
-    
+    -fx-text-fill: #ADA74CFF
 }
-#buttonChallenge:hover{
+.YellowButton:hover{
+    -fx-background-color: #FFFCCFFF;
+}
+
+.YellowButton:pressed{
     -fx-background-color: #FFED00;
 }
-
-
-#buttondialog{
-    -fx-font:bold 1em "Cooper Black";
-    -fx-background-color: #D36779;
-    -fx-background-radius: 10px;
-    -fx-pref-width: 200px;  /* Set the preferred width */
-    -fx-pref-height: 30px;
-   
-    
-}
-#buttondialog:hover{
-    -fx-background-color: #FFED00;
-}
-
-
-
 

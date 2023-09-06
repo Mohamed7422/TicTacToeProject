@@ -3,186 +3,174 @@ package tictactoeclientapplication;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
-import javafx.scene.effect.ColorAdjust;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.text.Font;
+import static javafx.scene.layout.Region.USE_PREF_SIZE;
+import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 
 public class LoginLayout extends BorderPane {
 
-    protected final BorderPane borderPane;
-    protected final AnchorPane anchorPane;
+    protected final VBox vBox;
+    protected final VBox vBox0;
     protected final HBox hBox;
-    protected final Text text;
-    protected final FlowPane flowPane;
-    protected final Text text0;
-    protected final TextField userNameBtn;
-    protected final Text text1;
-    protected final TextField passwordBtn;
-    protected final Button loginBtn;
-    protected final ColorAdjust colorAdjust;
-    protected final Text text2;
-    protected final Text text3;
-    protected final Button btnSignUp;
-    protected final ColorAdjust colorAdjust0;
-    protected final Button btnGuest;
-    protected final ColorAdjust colorAdjust1;
+    protected final Text textUsername;
+    protected final TextField textFieldUsername;
+    protected final HBox hBox0;
+    protected final Text textPassword;
+    protected final TextField textFieldPassword;
+    protected final HBox hBox1;
+    protected final Text textTitle;
+    protected final HBox hBox2;
+    protected final HBox hBox3;
+    protected final Text textHaveNot;
+    protected final Text textSignUp;
+    protected final Text textOr;
+    protected final Text textGuest;
+    protected final Button btnSignIn;
 
     public LoginLayout(OnNavigation onNav) {
 
-        borderPane = new BorderPane();
-        anchorPane = new AnchorPane();
+        getStyleClass().add("Pane");
+
+        vBox = new VBox();
+        vBox0 = new VBox();
         hBox = new HBox();
-        text = new Text();
-        flowPane = new FlowPane();
-        text0 = new Text();
-        userNameBtn = new TextField();
-        text1 = new Text();
-        passwordBtn = new TextField();
-        loginBtn = new Button();
-        colorAdjust = new ColorAdjust();
-        text2 = new Text();
-        text3 = new Text();
-        btnSignUp = new Button();
-        colorAdjust0 = new ColorAdjust();
-        btnGuest = new Button();
-        colorAdjust1 = new ColorAdjust();
+        hBox0 = new HBox();
+        hBox1 = new HBox();
+        hBox2 = new HBox();
+        hBox3 = new HBox();
+        textTitle = new Text();
+        textUsername = new Text();
+        textPassword = new Text();
+        textHaveNot = new Text();
+        textSignUp = new Text();
+        textFieldUsername = new TextField();
+        textFieldPassword = new TextField();
+        textOr = new Text();
+        textGuest = new Text();
+        btnSignIn = new Button("Login");
 
-        BorderPane.setAlignment(borderPane, javafx.geometry.Pos.CENTER);
-        borderPane.setStyle("-fx-background-color: #E4D5D5;");
-
-        BorderPane.setAlignment(anchorPane, javafx.geometry.Pos.CENTER);
-        anchorPane.setId("AnchorPane");
-        anchorPane.setMaxHeight(USE_PREF_SIZE);
-        anchorPane.setMaxWidth(USE_PREF_SIZE);
-        anchorPane.setMinHeight(USE_PREF_SIZE);
-        anchorPane.setMinWidth(USE_PREF_SIZE);
-        anchorPane.setStyle("-fx-background-color: #E4D5D5;");
-
-        hBox.setLayoutX(214.0);
-        hBox.setLayoutY(35.0);
-
-        text.setFill(javafx.scene.paint.Color.valueOf("#a94064"));
-        text.setStrokeType(javafx.scene.shape.StrokeType.OUTSIDE);
-        text.setStrokeWidth(0.0);
-        text.setText("LOGIN");
-        text.setTextAlignment(javafx.scene.text.TextAlignment.CENTER);
-        text.setWrappingWidth(112.13671875);
-        text.setFont(new Font("Snap ITC", 25.0));
-
-        flowPane.setLayoutX(51.0);
-        flowPane.setLayoutY(117.0);
-        flowPane.setPrefHeight(117.0);
-        flowPane.setPrefWidth(489.0);
-
-        text0.setFill(javafx.scene.paint.Color.valueOf("#a94064"));
-        text0.setStrokeType(javafx.scene.shape.StrokeType.OUTSIDE);
-        text0.setStrokeWidth(0.0);
-        text0.setText("User Name");
-        text0.setWrappingWidth(128.716796875);
-        text0.setFont(new Font("Snap ITC", 18.0));
-
-        userNameBtn.setPrefHeight(25.0);
-        userNameBtn.setPrefWidth(319.0);
-        userNameBtn.setStyle("-fx-background-radius: 30;");
-        FlowPane.setMargin(userNameBtn, new Insets(0.0, 0.0, 0.0, 15.0));
-
-        text1.setFill(javafx.scene.paint.Color.valueOf("#a94064"));
-        text1.setLayoutX(10.0);
-        text1.setLayoutY(29.0);
-        text1.setStrokeType(javafx.scene.shape.StrokeType.OUTSIDE);
-        text1.setStrokeWidth(0.0);
-        text1.setText("Password");
-        text1.setWrappingWidth(122.716796875);
-        text1.setFont(new Font("Snap ITC", 18.0));
-        FlowPane.setMargin(text1, new Insets(20.0, 0.0, 0.0, 0.0));
-
-        passwordBtn.setLayoutX(133.0);
-        passwordBtn.setLayoutY(10.0);
-        passwordBtn.setPrefHeight(25.0);
-        passwordBtn.setPrefWidth(319.0);
-        passwordBtn.setStyle("-fx-background-radius: 30;");
-        FlowPane.setMargin(passwordBtn, new Insets(30.0, 0.0, 0.0, 20.0));
-
-        loginBtn.setLayoutX(226.0);
-        loginBtn.setLayoutY(234.0);
-        loginBtn.setMnemonicParsing(false);
-        loginBtn.setPrefHeight(44.0);
-        loginBtn.setPrefWidth(148.0);
-        loginBtn.setStyle("-fx-background-color: #a94064; -fx-background-radius: 30;");
-        loginBtn.getStyleClass().add("-fx-background-color: #20B2AA;-fx-background-radius: 15px;-fx-text-fill: #ffffff;");
-        loginBtn.setText("Login");
-        loginBtn.setTextFill(javafx.scene.paint.Color.WHITE);
-        loginBtn.setFont(new Font("Snap ITC", 20.0));
-
-        loginBtn.setOnAction(e -> {
+        //Background background1 = new Background(new BackgroundFill(Color.valueOf("#A94064"), new CornerRadii(10), new Insets(10)));
+        btnSignIn.setPrefHeight(50.0);
+        btnSignIn.setPrefWidth(200.0);
+        btnSignIn.getStyleClass().add("PinkButton");
+        btnSignIn.setOnAction((e) -> {
             onNav.onNavClick("home");
         });
+        btnSignIn.setPrefWidth(250);
 
-        loginBtn.setEffect(colorAdjust);
+        setMaxHeight(USE_PREF_SIZE);
+        setMaxWidth(USE_PREF_SIZE);
+        setMinHeight(USE_PREF_SIZE);
+        setMinWidth(USE_PREF_SIZE);
 
-        text2.setLayoutX(131.0);
-        text2.setLayoutY(338.0);
-        text2.setStrokeType(javafx.scene.shape.StrokeType.OUTSIDE);
-        text2.setStrokeWidth(0.0);
-        text2.setText("Don't Have An Account?");
-        text2.setFont(new Font(21.0));
+        BorderPane.setAlignment(vBox, javafx.geometry.Pos.CENTER);
+        vBox.setAlignment(javafx.geometry.Pos.CENTER);
 
-        text3.setLayoutX(174.0);
-        text3.setLayoutY(373.0);
-        text3.setStrokeType(javafx.scene.shape.StrokeType.OUTSIDE);
-        text3.setStrokeWidth(0.0);
-        text3.setText("or");
-        text3.setFont(new Font(21.0));
+        hBox.setAlignment(javafx.geometry.Pos.CENTER);
 
-        btnSignUp.setLayoutX(360.0);
-        btnSignUp.setLayoutY(309.0);
-        btnSignUp.setMnemonicParsing(false);
-        btnSignUp.setPrefHeight(32.0);
-        btnSignUp.setPrefWidth(112.0);
-        btnSignUp.setStyle("-fx-background-color: #E4D5D5; -fx-background-radius: 30;");
-        btnSignUp.getStyleClass().add("-fx-background-color: #20B2AA;-fx-background-radius: 15px;-fx-text-fill: #ffffff;");
-        btnSignUp.setText("SignUp");
-        btnSignUp.setTextFill(javafx.scene.paint.Color.valueOf("#a94064"));
-        btnSignUp.setFont(new Font("Snap ITC", 20.0));
+        textUsername.getStyleClass().add("PinkText");
+        textUsername.setText("Username");
+        textUsername.setWrappingWidth(150);
 
-        btnSignUp.setOnAction(e -> {
+        VBox.setMargin(hBox, new Insets(0.0));
+        hBox.setPadding(new Insets(16.0, 0.0, 8.0, 0.0));
+
+        hBox0.setAlignment(javafx.geometry.Pos.CENTER);
+        hBox0.setPrefHeight(0.0);
+        hBox0.setPrefWidth(600.0);
+
+        textPassword.getStyleClass().add("PinkText");
+        textPassword.setText("Password");
+        textPassword.setWrappingWidth(150);
+
+        VBox.setMargin(hBox0, new Insets(0.0));
+        hBox0.setPadding(new Insets(8.0, 0.0, 8.0, 0.0));
+
+        hBox1.setAlignment(javafx.geometry.Pos.CENTER);
+        hBox1.setPrefHeight(0.0);
+        hBox1.setPrefWidth(600.0);
+
+        VBox.setMargin(hBox1, new Insets(0.0));
+        hBox1.setPadding(new Insets(8.0, 0.0, 16.0, 0.0));
+        setCenter(vBox);
+
+        BorderPane.setAlignment(textTitle, javafx.geometry.Pos.CENTER);
+        textTitle.setStrokeType(javafx.scene.shape.StrokeType.OUTSIDE);
+        textTitle.setStrokeWidth(0.0);
+        textTitle.setText("Sign In");
+        textTitle.getStyleClass().add("PinkTextLarge");
+        textTitle.setTextAlignment(javafx.scene.text.TextAlignment.CENTER);
+        BorderPane.setMargin(textTitle, new Insets(100.0, 0.0, 25.0, 0.0));
+        setTop(textTitle);
+
+        BorderPane.setAlignment(vBox0, javafx.geometry.Pos.CENTER);
+
+        hBox2.setAlignment(javafx.geometry.Pos.CENTER);
+        hBox2.setSpacing(10.0);
+        textHaveNot.setStrokeType(javafx.scene.shape.StrokeType.OUTSIDE);
+        textHaveNot.getStyleClass().add("BlackText");
+        textHaveNot.setText("I don't have an account.");
+        textSignUp.setStrokeType(javafx.scene.shape.StrokeType.OUTSIDE);
+        textSignUp.setStrokeWidth(0.0);
+        textSignUp.setText("sign up");
+        textSignUp.getStyleClass().add("EditableText");
+        hBox2.setPadding(new Insets(25.0, 0.0, 0.0, 0.0));
+
+        hBox3.setAlignment(javafx.geometry.Pos.CENTER);
+        hBox3.setSpacing(10.0);
+        textOr.setStrokeType(javafx.scene.shape.StrokeType.OUTSIDE);
+        textOr.getStyleClass().add("BlackText");
+        textOr.setText("or");
+        textGuest.setStrokeType(javafx.scene.shape.StrokeType.OUTSIDE);
+        textGuest.setStrokeWidth(0.0);
+        textGuest.setText("as a Guest");
+        textGuest.getStyleClass().add("EditableText");
+        hBox3.setPadding(new Insets(0.0, 0.0, 25.0, 0.0));
+
+        setBottom(vBox0);
+
+        textSignUp.setOnMouseEntered(e -> {
+            textSignUp.setStyle("-fx-fill: #FFED00;");
+        });
+        textSignUp.setOnMouseExited(e -> {
+            textSignUp.setStyle("-fx-fill: #D36779;");
+        });
+        textSignUp.setOnMouseClicked(e -> {
             onNav.onNavClick("sign up");
         });
-        btnSignUp.setEffect(colorAdjust0);
 
-        btnGuest.setLayoutX(194.0);
-        btnGuest.setLayoutY(344.0);
-        btnGuest.setMnemonicParsing(false);
-        btnGuest.setPrefHeight(41.0);
-        btnGuest.setPrefWidth(278.0);
-        btnGuest.setStyle("-fx-background-color: #E4D5D5; -fx-background-radius: 30;");
-        btnGuest.getStyleClass().add("-fx-background-color: #20B2AA;-fx-background-radius: 15px;-fx-text-fill: #ffffff;");
-        btnGuest.setText("Continue As A Guest");
-        btnGuest.setTextFill(javafx.scene.paint.Color.valueOf("#a94064"));
-        btnGuest.setFont(new Font("Snap ITC", 20.0));
-        btnGuest.setOnAction(e -> {
+        textGuest.setOnMouseEntered(e -> {
+            textGuest.setStyle("-fx-fill: #FFED00;");
+        });
+        textGuest.setOnMouseExited(e -> {
+            textGuest.setStyle("-fx-fill: #D36779;");
+        });
+        textGuest.setOnMouseClicked(e -> {
             onNav.onNavClick("home");
         });
-        btnGuest.setEffect(colorAdjust1);
-        borderPane.setCenter(anchorPane);
-        setCenter(borderPane);
 
-        hBox.getChildren().add(text);
-        anchorPane.getChildren().add(hBox);
-        flowPane.getChildren().add(text0);
-        flowPane.getChildren().add(userNameBtn);
-        flowPane.getChildren().add(text1);
-        flowPane.getChildren().add(passwordBtn);
-        anchorPane.getChildren().add(flowPane);
-        anchorPane.getChildren().add(loginBtn);
-        anchorPane.getChildren().add(text2);
-        anchorPane.getChildren().add(text3);
-        anchorPane.getChildren().add(btnSignUp);
-        anchorPane.getChildren().add(btnGuest);
+        textFieldUsername.setPrefWidth(200);
+        textFieldPassword.setPrefWidth(200);
+        textFieldUsername.getStyleClass().add("TextField");
+        textFieldPassword.getStyleClass().add("TextField");
+
+        hBox.getChildren().add(textUsername);
+        hBox.getChildren().add(textFieldUsername);
+        vBox.getChildren().add(hBox);
+        hBox0.getChildren().add(textPassword);
+        hBox0.getChildren().add(textFieldPassword);
+        vBox.getChildren().add(hBox0);
+        vBox.getChildren().add(hBox1);
+        hBox2.getChildren().add(textHaveNot);
+        hBox2.getChildren().add(textSignUp);
+        hBox3.getChildren().add(textOr);
+        hBox3.getChildren().add(textGuest);
+
+        vBox.getChildren().add(btnSignIn);
+
+        vBox0.getChildren().addAll(hBox2, hBox3);
 
     }
 }

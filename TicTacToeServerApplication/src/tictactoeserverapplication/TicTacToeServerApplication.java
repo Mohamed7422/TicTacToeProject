@@ -21,7 +21,7 @@ public class TicTacToeServerApplication extends Application {
     public void start(Stage stage) throws Exception {
         Parent root = new ServerLayout();
         
-        Scene scene = new Scene(root);
+        Scene scene = new Scene(root,700,600);
         
         stage.setScene(scene);
         stage.show();

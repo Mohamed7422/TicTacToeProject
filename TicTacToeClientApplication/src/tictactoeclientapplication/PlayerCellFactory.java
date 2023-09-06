@@ -1,16 +1,10 @@
 
 package tictactoeclientapplication;
 
-import javafx.scene.control.Button;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
-import javafx.scene.layout.Background;
 import javafx.util.Callback;
 
-/**
- *
- * @author muham
- */
 public class PlayerCellFactory implements Callback<ListView<Player>, ListCell<Player>> {
     
     OnNavigation onNav;
@@ -19,8 +13,10 @@ public class PlayerCellFactory implements Callback<ListView<Player>, ListCell<Pl
     
     }
 
+    @Override
     public ListCell<Player> call(ListView<Player> param) {
         return new ListCell<Player>() {
+            @Override
             public void updateItem(Player player,boolean empty){
                 super.updateItem(player, empty);
                 
@@ -37,10 +33,7 @@ public class PlayerCellFactory implements Callback<ListView<Player>, ListCell<Pl
                 }
             }
             @Override
-            public void updateSelected(boolean selected) {
-                // Disable the selected effect
-                // Comment out or remove this method override if you want the default selected effect
-            }
+            public void updateSelected(boolean selected) {}
             
             
 
@@ -48,15 +41,3 @@ public class PlayerCellFactory implements Callback<ListView<Player>, ListCell<Pl
     }
 
 }
-
-/*class Player {
-
-    String name;
-    int score;
-
-    public Player(String name, int score) {
-        this.name = name;
-        this.score = score;
-    }
-
-}*/
