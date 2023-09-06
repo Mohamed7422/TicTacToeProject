@@ -1,5 +1,19 @@
 package tictactoeclientapplication;
 
+import tictactoeclientapplication.utils.OnNavigation;
+import tictactoeclientapplication.network.ClientSocket;
+import tictactoeclientapplication.layouts.SignUpLayout;
+import tictactoeclientapplication.layouts.LevelsLayout;
+import tictactoeclientapplication.layouts.HomeLayout;
+import tictactoeclientapplication.layouts.ListViewLayout;
+import tictactoeclientapplication.layouts.LoginLayout;
+import tictactoeclientapplication.layouts.GameBoardLayout;
+import java.io.DataInputStream;
+import java.io.IOException;
+import java.io.PrintStream;
+import java.net.Socket;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -8,6 +22,12 @@ public class TicTacToeClientApplication extends Application implements OnNavigat
 
     Stage stage;
     Scene scene;
+    
+    
+    
+    public void init(){
+        ClientSocket.getInstance().openConnection();
+    }
 
     @Override
     public void start(Stage stage) throws Exception {
@@ -15,7 +35,6 @@ public class TicTacToeClientApplication extends Application implements OnNavigat
         LoginLayout root = new LoginLayout(this);
         scene = new Scene(root, 800, 600);
         scene.getStylesheets().add(getClass().getResource("Style.css").toString());
-
         this.stage.setScene(scene);
         this.stage.show();
     }

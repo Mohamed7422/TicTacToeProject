@@ -1,6 +1,8 @@
 
-package tictactoeclientapplication;
+package tictactoeclientapplication.layouts.listview;
 
+import tictactoeclientapplication.utils.OnNavigation;
+import tictactoeclientapplication.data.Player;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.util.Callback;
@@ -8,7 +10,7 @@ import javafx.util.Callback;
 public class PlayerCellFactory implements Callback<ListView<Player>, ListCell<Player>> {
     
     OnNavigation onNav;
-    PlayerCellFactory(OnNavigation onNav){
+    public PlayerCellFactory(OnNavigation onNav){
         this.onNav = onNav;
     
     }

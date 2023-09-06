@@ -1,9 +1,12 @@
-package tictactoeclientapplication;
+package tictactoeclientapplication.layouts;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.ListView;
 import javafx.scene.layout.BorderPane;
+import tictactoeclientapplication.utils.OnNavigation;
+import tictactoeclientapplication.data.Player;
+import tictactoeclientapplication.layouts.listview.PlayerCellFactory;
 
 public class ListViewLayout extends BorderPane {
 

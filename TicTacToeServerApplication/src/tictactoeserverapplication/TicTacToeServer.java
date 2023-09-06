@@ -42,29 +42,22 @@ public class TicTacToeServer extends Thread {
                 chatHandler.closeHandler();
             }
             waiter.close();
-//            if (waiter != null) {
-//                waiter.close();
-//            }
             server.close();
             System.out.println("Server has been closed");
         } catch (IOException ex) {
             Logger.getLogger(TicTacToeServer.class.getName()).log(Level.SEVERE, null, ex);
         }
-        //serverFlag = false;
-
         stop();
     }
 }
 
 class ChatHandler {
-
     static int ID_GENERATOR = 1;
     int id;
     DataInputStream ear;
     PrintStream mouth;
     static Vector<ChatHandler> clients = new Vector<ChatHandler>();
     Thread th;
-    //boolean handlerFlag;
 
     ChatHandler(Socket waiter) {
         try {
@@ -76,13 +69,43 @@ class ChatHandler {
             ChatHandler.clients.add(this);
             //start();
             th = new Thread(() -> {
+                //isConnected = waiter.isConnected();
                 while (true) {
+                    System.out.println("listening...");
                     try {
-                        String msg = ear.readLine();
-                        System.out.println("received from user" + this.id + ": " + msg);
-                        sendToAllClients(msg);
+                        String msg = ear.readLine();//login:moha:12345
+                        System.out.println(msg);
+                        String[] split = msg.split(":");
+                        System.out.println(split.length);
+                        System.out.println(split[0]);//login - signup - challenge - accept
+                        /*if(split[0].trim().equals("login")){
+                            sendToClient(this.id,"loged in");
+                        }*/
+                        /*String[] split = msg.split(":");*/
+                        switch(split[0]){
+                            case "login":
+                                //login()
+                                sendToClient(id,split[0]+"-success");//or"-fail"
+                                break;
+                            case "signup":
+                                //signUp()
+                                sendToClient(id,split[0]+"-success");//or"-fail"
+                                break;
+                            case "invite"://inite:id
+                                //invitation()
+                                sendToClient(id,split[0]+"-success");//or"-fail"
+                                break;
+                        }
+                        
                     } catch (IOException ex) {
-                        ex.printStackTrace();
+                        System.out.println("server: connection error from user"+this.id);
+                        try {
+                            ear.close();
+                            mouth.close();
+                        } catch (IOException ex1) {
+                            Logger.getLogger(ChatHandler.class.getName()).log(Level.SEVERE, null, ex1);
+                        }
+                        break;
                     }
                 }
             });
@@ -94,20 +117,16 @@ class ChatHandler {
 
     }
 
-    public void run() {
-
-    }
+    
 
     
-    /*void sendToClient(int id,String msg) {
+   void sendToClient(int id, String msg) {
         for (ChatHandler client : clients) {
-            if(){
-                client.mouth.println("user" + this.id + ": " + msg);
+            if(client.id == id){
+                client.mouth.println(msg);
             }
-            //System.out.println(client.id);
-            
         }
-    }*/
+    }
     
     void sendToAllClients(String msg) {
         for (ChatHandler client : clients) {

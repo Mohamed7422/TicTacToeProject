@@ -1,5 +1,7 @@
-package tictactoeclientapplication;
+package tictactoeclientapplication.layouts.listview;
 
+import tictactoeclientapplication.utils.OnNavigation;
+import tictactoeclientapplication.data.Player;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.layout.HBox;

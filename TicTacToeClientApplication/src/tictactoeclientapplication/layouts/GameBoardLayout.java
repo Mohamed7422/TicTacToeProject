@@ -1,4 +1,4 @@
-package tictactoeclientapplication;
+package tictactoeclientapplication.layouts;
 
 import javafx.geometry.Insets;
 import static javafx.geometry.Orientation.HORIZONTAL;
@@ -7,6 +7,9 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
+import tictactoeclientapplication.utils.Dialog;
+import tictactoeclientapplication.utils.DialogClicks;
+import tictactoeclientapplication.utils.OnNavigation;
 
 public class GameBoardLayout extends BorderPane implements DialogClicks {
 

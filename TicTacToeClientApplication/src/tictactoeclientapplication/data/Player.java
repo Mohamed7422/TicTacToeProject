@@ -1,4 +1,4 @@
-package tictactoeclientapplication;
+package tictactoeclientapplication.data;
 
 
     public class Player {

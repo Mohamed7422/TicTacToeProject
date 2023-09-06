@@ -1,8 +1,9 @@
-package tictactoeclientapplication;
+package tictactoeclientapplication.layouts;
 
 import javafx.geometry.Orientation;
 import javafx.scene.control.Button;
 import javafx.scene.layout.FlowPane;
+import tictactoeclientapplication.utils.OnNavigation;
 
 public class LevelsLayout extends FlowPane {
 
@@ -10,7 +11,7 @@ public class LevelsLayout extends FlowPane {
     Button btnMed;
     Button btnHard;
 
-    LevelsLayout(OnNavigation onNav) {
+    public LevelsLayout(OnNavigation onNav) {
         setVgap(20);
 
         btnEasy = new Button("Easy");

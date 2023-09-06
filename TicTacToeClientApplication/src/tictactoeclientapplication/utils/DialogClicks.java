@@ -1,4 +1,4 @@
-package tictactoeclientapplication;
+package tictactoeclientapplication.utils;
 
 public interface DialogClicks {
 

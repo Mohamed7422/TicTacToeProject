@@ -1,4 +1,4 @@
-package tictactoeclientapplication;
+package tictactoeclientapplication.layouts;
 
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
@@ -7,6 +7,8 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
+import tictactoeclientapplication.network.ClientSocket;
+import tictactoeclientapplication.utils.OnNavigation;
 
 public class SignUpLayout extends BorderPane {
 
@@ -54,7 +56,13 @@ public class SignUpLayout extends BorderPane {
         btnSignUp.setPrefWidth(200.0);
         btnSignUp.getStyleClass().add("PinkButton");
         btnSignUp.setOnAction((e) -> {
-            onNav.onNavClick("home");
+            if (!ClientSocket.getInstance().isConnected()) {
+                ClientSocket.getInstance().openConnection();
+            }
+            if (ClientSocket.getInstance().isConnected()) {
+                ClientSocket.getInstance().say("signup:username:password");
+            }
+            //onNav.onNavClick("home");
         });
         btnSignUp.setPrefWidth(250);
         

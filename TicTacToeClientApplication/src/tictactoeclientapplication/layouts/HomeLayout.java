@@ -1,8 +1,9 @@
-package tictactoeclientapplication;
+package tictactoeclientapplication.layouts;
 
 import javafx.geometry.Orientation;
 import javafx.scene.control.Button;
 import javafx.scene.layout.FlowPane;
+import tictactoeclientapplication.utils.OnNavigation;
 
 public class HomeLayout extends FlowPane {
 
@@ -10,7 +11,7 @@ public class HomeLayout extends FlowPane {
     Button localButton;
     Button onlineButton;
 
-    HomeLayout(OnNavigation onNav) {
+    public HomeLayout(OnNavigation onNav) {
         setVgap(20);
         computerButton = new Button("Computer");
         localButton = new Button("Local");
