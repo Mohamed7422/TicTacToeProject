@@ -18,9 +18,9 @@
 -- Create the Player table
 CREATE TABLE Player (
     PlayerId INT GENERATED ALWAYS AS IDENTITY,
-    UserName VARCHAR(50) NOT NULL,
+    UserName VARCHAR(50) NOT NULL UNIQUE,
     Password VARCHAR(50) NOT NULL,
-    Score INT 0,
+    Score INT DEFAULT 0,
     Status VARCHAR(50) NOT NULL DEFAULT 'Online', -- Default status is 'Online'
     PRIMARY KEY (PlayerId)
 );

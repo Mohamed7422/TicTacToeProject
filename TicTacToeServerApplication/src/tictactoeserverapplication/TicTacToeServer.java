@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -34,8 +35,7 @@ public class TicTacToeServer extends Thread {
             ex.printStackTrace();
         }
     }
-    
-    
+
     void closeServer() {
         try {
             if (chatHandler != null) {
@@ -52,6 +52,7 @@ public class TicTacToeServer extends Thread {
 }
 
 class ChatHandler {
+
     static int ID_GENERATOR = 1;
     int id;
     DataInputStream ear;
@@ -71,26 +72,35 @@ class ChatHandler {
                     System.out.println("listening...");
                     try {
                         String msg = ear.readLine();
-                        if(msg == null) break;
+                        if (msg == null) {
+                            break;
+                        }
                         System.out.println(msg);
                         String[] split = msg.split(":");
-                        switch(split[0]){
+                        switch (split[0]) {
                             case "login":
                                 //login()
-                                sendToClient(id,split[0]+"-success");//or"-fail"
+                                sendToClient(id, split[0] + "-success");//or"-fail"
                                 break;
                             case "signup":
-                                //signUp()
-                                sendToClient(id,split[0]+"-success");//or"-fail"
+                                String name = split[1];
+                                String pass = split[2];
+                                System.out.println("order recieved");
+                                if (signUp(name, pass)) {
+
+                                    sendToClient(id, split[0] + "-success");//or"-fail"
+                                } else {
+                                    sendToClient(id, split[0] + "-fail");
+                                }
                                 break;
                             case "invite":
                                 //invitation()
-                                sendToClient(id,split[0]+"-success");//or"-fail"
+                                sendToClient(id, split[0] + "-success");//or"-fail"
                                 break;
                         }
-                        
+
                     } catch (IOException ex) {
-                        System.out.println("server: connection error from user"+this.id);
+                        System.out.println("server: connection error from user" + this.id);
                         try {
                             ear.close();
                             mouth.close();
@@ -110,17 +120,14 @@ class ChatHandler {
 
     }
 
-    
-
-    
-   void sendToClient(int id, String msg) {
+    void sendToClient(int id, String msg) {
         for (ChatHandler client : clients) {
-            if(client.id == id){
+            if (client.id == id) {
                 client.mouth.println(msg);
             }
         }
     }
-    
+
     void sendToAllClients(String msg) {
         for (ChatHandler client : clients) {
             client.mouth.println("user" + this.id + ": " + msg);
@@ -136,5 +143,10 @@ class ChatHandler {
         } catch (IOException ex) {
             Logger.getLogger(ChatHandler.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+
+    public boolean signUp(String name, String pass) {
+
+        return new DataBaseAccessLayer().insertPlayer(new Player(name, pass, 0, "online"));
     }
 }

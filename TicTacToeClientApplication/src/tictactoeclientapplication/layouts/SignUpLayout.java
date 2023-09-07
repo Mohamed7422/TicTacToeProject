@@ -58,20 +58,46 @@ public class SignUpLayout extends BorderPane {
         btnSignUp.setPrefWidth(200.0);
         btnSignUp.getStyleClass().add("PinkButton");
         btnSignUp.setOnAction((e) -> {
-            if (!ClientSocket.getInstance().isConnected()) {
-                try {
-                    ClientSocket.getInstance().openConnection();
-                } catch (IOException ex) {
-                    System.out.println("client: connection error");
+            String name = textFieldUsername.getText().trim();
+            String pass = textFieldPassword.getText().trim();
+            String passConfirm = textFieldConfirm.getText().trim();
+            if (name.isEmpty() || pass.isEmpty() || passConfirm.isEmpty()) {
+                System.out.println("Empty Fields is Required");
+                //("Empty Fields is Required");
+            } else if (textFieldPassword.getText().length() < 6) {
+                   System.out.println("Your password less than 6 character");
+                //("Your password less than 5 character");
+            } else if (!textFieldPassword.getText().equals(textFieldConfirm.getText())) {
+                System.out.println("Please check your password");
+                //("Please check your password");
+            } else {
+                System.out.println("else");
+                if (!ClientSocket.getInstance().isConnected()) {
+                    try {
+                        System.out.println("no connection");
+                        ClientSocket.getInstance().openConnection();
+                    } catch (IOException ex) {
+                        System.out.println("client: connection error");
+                    }
+                }
+                if (ClientSocket.getInstance().isConnected()) {
+                    System.out.println("connected");
+                    ClientSocket.getInstance().say("signup:"+name+":"+pass, (msg) -> {
+                        System.out.println(msg);
+                        if (msg.equals("signup-success")) {
+                            onNav.onNavClick("home");
+                        } else if (msg.equals("signup-fail")) {
+
+                            System.out.println("Sign Up Fail");
+                        }
+
+                    });
                 }
             }
-            if (ClientSocket.getInstance().isConnected()) {
-                ClientSocket.getInstance().say("signup:username:password",(msg)->{
-                    System.out.println(msg);
-                });
-            }
-            //onNav.onNavClick("home");
+
+            
         });
+
         btnSignUp.setPrefWidth(250);
 
         setMaxHeight(USE_PREF_SIZE);
@@ -164,6 +190,5 @@ public class SignUpLayout extends BorderPane {
         hBox2.getChildren().add(textAlready);
         hBox2.getChildren().add(textLogin);
         vBox.getChildren().add(btnSignUp);
-
     }
 }
