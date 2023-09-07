@@ -26,7 +26,11 @@ public class TicTacToeClientApplication extends Application implements OnNavigat
     
     
     public void init(){
-        ClientSocket.getInstance().openConnection();
+        try {
+            ClientSocket.getInstance().openConnection();
+        } catch (IOException ex) {
+            System.out.println("client: connection error");
+        }
     }
 
     @Override

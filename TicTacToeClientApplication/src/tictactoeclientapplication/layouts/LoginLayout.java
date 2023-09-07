@@ -1,5 +1,6 @@
 package tictactoeclientapplication.layouts;
 
+import java.io.IOException;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
@@ -59,12 +60,24 @@ public class LoginLayout extends BorderPane {
         btnSignIn.getStyleClass().add("PinkButton");
         btnSignIn.setOnAction((e) -> {
             if (!ClientSocket.getInstance().isConnected()) {
-                ClientSocket.getInstance().openConnection();
+                try {
+                    ClientSocket.getInstance().openConnection();
+                } catch (IOException ex) {
+                    //dialog to show that there is connection error
+                    System.out.println("client: connection error");
+                }
             }
             if (ClientSocket.getInstance().isConnected()) {
-                ClientSocket.getInstance().say("login:username:password");
+                ClientSocket.getInstance().say("login:username:password",(msg)->{
+                    System.out.println(msg);
+                    if(msg.trim().equals("login-success")){
+                        onNav.onNavClick("home");
+                    }else{
+                        ////dialog to show that the user is unauthenticated
+                        System.out.println("client: unauthenticated");
+                    }
+                });
             }
-            onNav.onNavClick("home");
         });
         btnSignIn.setPrefWidth(250);
 

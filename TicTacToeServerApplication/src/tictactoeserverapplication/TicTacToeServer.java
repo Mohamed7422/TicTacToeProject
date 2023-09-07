@@ -26,7 +26,7 @@ public class TicTacToeServer extends Thread {
             server = new ServerSocket(5000);
             while (true) {
                 System.out.println("accepting...");
-                waiter = server.accept();//////
+                waiter = server.accept();
                 chatHandler = new ChatHandler(waiter);
             }
 
@@ -61,27 +61,19 @@ class ChatHandler {
 
     ChatHandler(Socket waiter) {
         try {
-            //handlerFlag = true;
             System.out.println("one user accepted");
             ear = new DataInputStream(waiter.getInputStream());
             mouth = new PrintStream(waiter.getOutputStream());
             this.id = ID_GENERATOR++;
             ChatHandler.clients.add(this);
-            //start();
             th = new Thread(() -> {
-                //isConnected = waiter.isConnected();
                 while (true) {
                     System.out.println("listening...");
                     try {
-                        String msg = ear.readLine();//login:moha:12345
+                        String msg = ear.readLine();
+                        if(msg == null) break;
                         System.out.println(msg);
                         String[] split = msg.split(":");
-                        System.out.println(split.length);
-                        System.out.println(split[0]);//login - signup - challenge - accept
-                        /*if(split[0].trim().equals("login")){
-                            sendToClient(this.id,"loged in");
-                        }*/
-                        /*String[] split = msg.split(":");*/
                         switch(split[0]){
                             case "login":
                                 //login()
@@ -91,7 +83,7 @@ class ChatHandler {
                                 //signUp()
                                 sendToClient(id,split[0]+"-success");//or"-fail"
                                 break;
-                            case "invite"://inite:id
+                            case "invite":
                                 //invitation()
                                 sendToClient(id,split[0]+"-success");//or"-fail"
                                 break;
@@ -108,9 +100,10 @@ class ChatHandler {
                         break;
                     }
                 }
+                System.out.println("connection with client has been closed");
+                closeHandler();
             });
             th.start();
-
         } catch (IOException ex) {
             ex.printStackTrace();
         }
@@ -130,12 +123,18 @@ class ChatHandler {
     
     void sendToAllClients(String msg) {
         for (ChatHandler client : clients) {
-            //System.out.println(client.id);
             client.mouth.println("user" + this.id + ": " + msg);
         }
     }
 
     void closeHandler() {
-        th.stop();
+        try {
+            ear.close();
+            mouth.flush();
+            mouth.close();
+            th.stop();
+        } catch (IOException ex) {
+            Logger.getLogger(ChatHandler.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 }

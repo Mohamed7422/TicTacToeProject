@@ -1,5 +1,8 @@
 package tictactoeclientapplication.layouts;
 
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
@@ -32,7 +35,6 @@ public class SignUpLayout extends BorderPane {
 
         //Background background = new Background(new BackgroundFill(Color.valueOf("#E4D5D5"), new CornerRadii(10), new Insets(10)));
         //this.setBackground(background);
-        
         getStyleClass().add("Pane");
 
         vBox = new VBox();
@@ -57,15 +59,20 @@ public class SignUpLayout extends BorderPane {
         btnSignUp.getStyleClass().add("PinkButton");
         btnSignUp.setOnAction((e) -> {
             if (!ClientSocket.getInstance().isConnected()) {
-                ClientSocket.getInstance().openConnection();
+                try {
+                    ClientSocket.getInstance().openConnection();
+                } catch (IOException ex) {
+                    System.out.println("client: connection error");
+                }
             }
             if (ClientSocket.getInstance().isConnected()) {
-                ClientSocket.getInstance().say("signup:username:password");
+                ClientSocket.getInstance().say("signup:username:password",(msg)->{
+                    System.out.println(msg);
+                });
             }
             //onNav.onNavClick("home");
         });
         btnSignUp.setPrefWidth(250);
-        
 
         setMaxHeight(USE_PREF_SIZE);
         setMaxWidth(USE_PREF_SIZE);
@@ -74,14 +81,12 @@ public class SignUpLayout extends BorderPane {
 
         BorderPane.setAlignment(vBox, javafx.geometry.Pos.CENTER);
         vBox.setAlignment(javafx.geometry.Pos.CENTER);
-        
 
         hBox.setAlignment(javafx.geometry.Pos.CENTER);
-        
 
         textUsername.getStyleClass().add("PinkText");
         textUsername.setText("Username");
-        textUsername.setWrappingWidth(250);  
+        textUsername.setWrappingWidth(250);
 
         VBox.setMargin(hBox, new Insets(0.0));
         hBox.setPadding(new Insets(16.0, 0.0, 8.0, 0.0));
