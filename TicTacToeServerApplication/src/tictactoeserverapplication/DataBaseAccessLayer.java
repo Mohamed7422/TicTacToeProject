@@ -25,7 +25,7 @@ public class DataBaseAccessLayer {
     public DataBaseAccessLayer() {
         // Establish database connection
         try {
-            String url = "jdbc:derby://localhost:1527/PlayerList";
+            String url = "jdbc:derby://localhost:1527/TicTacToeDB";
             String username = "root";
             String password = "root";
             Driver d = new org.apache.derby.jdbc.ClientDriver();
