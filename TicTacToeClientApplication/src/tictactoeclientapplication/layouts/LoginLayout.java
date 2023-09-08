@@ -59,6 +59,8 @@ public class LoginLayout extends BorderPane {
         btnSignIn.setPrefWidth(200.0);
         btnSignIn.getStyleClass().add("PinkButton");
         btnSignIn.setOnAction((e) -> {
+            String userName = textFieldUsername.getText().trim();
+            String pass = textFieldPassword.getText().trim();
             if (!ClientSocket.getInstance().isConnected()) {
                 try {
                     ClientSocket.getInstance().openConnection();
@@ -68,11 +70,13 @@ public class LoginLayout extends BorderPane {
                 }
             }
             if (ClientSocket.getInstance().isConnected()) {
-                ClientSocket.getInstance().say("login:username:password",(msg)->{
-                    System.out.println(msg);
-                    if(msg.trim().equals("login-success")){
+                ClientSocket.getInstance().say("login:" + userName + ":" + pass, (msg) -> {
+
+                    if (msg.trim().equals("login-success")) {
+
                         onNav.onNavClick("home");
-                    }else{
+
+                    } else if(msg.trim().equals("login-fail")) {
                         ////dialog to show that the user is unauthenticated
                         System.out.println("client: unauthenticated");
                     }
