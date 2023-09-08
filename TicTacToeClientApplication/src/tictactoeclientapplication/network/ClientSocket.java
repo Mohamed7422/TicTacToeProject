@@ -38,7 +38,11 @@ public class ClientSocket {
 
     public void openConnection() throws IOException {
         try {
+<<<<<<< HEAD
+            sc = new Socket("192.168.137.1", 5000);
+=======
             sc = new Socket("192.168.1.3", 5000);
+>>>>>>> main
             ear = new DataInputStream(sc.getInputStream());
             mouth = new PrintStream(sc.getOutputStream());
             System.out.println("client: connected");

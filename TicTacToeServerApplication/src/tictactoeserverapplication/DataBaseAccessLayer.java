@@ -18,9 +18,9 @@ import java.util.logging.Logger;
  *
  * @author muham
  */
-public class DataBaseAccessLayer {
+public  class DataBaseAccessLayer {
 
-    private Connection connection;
+    private  Connection connection;
 
     public DataBaseAccessLayer() {
         // Establish database connection
@@ -39,6 +39,23 @@ public class DataBaseAccessLayer {
 
     // Other methods for executing queries and interacting with the database
     //Implement CRUD(Create Insert - READ )
+<<<<<<< HEAD
+    
+    public  boolean insertPlayer(Player player){
+    
+ 
+        try {
+    
+            String insertQuery =  "INSERT INTO PLAYER (UserName, Password) VALUES(?,?)";
+            PreparedStatement ps = connection.prepareStatement(insertQuery);
+        
+            ps.setString(1,player.getName());
+            ps.setString(2,player.getPassword());
+             ps.executeUpdate();
+             System.out.println("test");
+             ps.close();
+             return true;
+=======
     public void insertPlayer(Player player) {
 
         try {
@@ -54,9 +71,22 @@ public class DataBaseAccessLayer {
             ps.executeUpdate();
             System.out.println("test");
             ps.close();
+>>>>>>> main
         } catch (SQLException ex) {
-            Logger.getLogger(DataBaseAccessLayer.class.getName()).log(Level.SEVERE, null, ex);
+                  Logger.getLogger(DataBaseAccessLayer.class.getName()).log(Level.SEVERE, null, ex);
+                  return false;
         }
+<<<<<<< HEAD
+    
+        
+  
+    }
+    
+    
+    
+ 
+=======
+>>>>>>> main
 
     }
 
