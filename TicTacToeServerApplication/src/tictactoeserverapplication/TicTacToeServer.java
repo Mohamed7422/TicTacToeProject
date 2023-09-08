@@ -79,24 +79,9 @@ class ChatHandler {
                         String[] split = msg.split(":");
                         switch (split[0]) {
                             case "login":
-<<<<<<< HEAD
-                                //login()
-                                sendToClient(id, split[0] + "-success");//or"-fail"
-                                break;
-                            case "signup":
                                 String name = split[1];
                                 String pass = split[2];
-                                System.out.println("order recieved");
-                                if (signUp(name, pass)) {
 
-                                    sendToClient(id, split[0] + "-success");//or"-fail"
-                                } else {
-                                    sendToClient(id, split[0] + "-fail");
-                                }
-=======
-                                String name = split[1];
-                                String pass = split[2];
-                                
                                 if (login(name, pass)) {
                                     sendToClient(id, split[0] + "-success");//or"-fail"
                                 } else {
@@ -106,8 +91,14 @@ class ChatHandler {
                                 break;
                             case "signup":
                                 //signUp()
-                                sendToClient(id, split[0] + "-success");//or"-fail"
->>>>>>> main
+
+                                if (signUp(split[1], split[2])) {
+                                    sendToClient(id, split[0] + "-success");//or"-fail"
+
+                                } else {
+                                    sendToClient(id, split[0] + "-fail");
+                                }
+
                                 break;
                             case "invite":
                                 //invitation()
@@ -161,13 +152,13 @@ class ChatHandler {
         }
     }
 
-<<<<<<< HEAD
     public boolean signUp(String name, String pass) {
 
         return new DataBaseAccessLayer().insertPlayer(new Player(name, pass, 0, "online"));
-=======
+    }
+
     private boolean login(String name, String pass) {
         return new DataBaseAccessLayer().signIn(name, pass);
->>>>>>> main
+
     }
 }
