@@ -6,6 +6,8 @@ package tictactoeserverapplication;
         private int score;
         private String status;
         private String password;// Online, In Game, Offline
+        
+        public Player(){};
 
         public Player(String name,String password, int score, String status) {
             this.name = name;
