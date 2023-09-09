@@ -1,5 +1,8 @@
 package tictactoeserverapplication;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
@@ -19,6 +22,28 @@ public class ServerLayout extends BorderPane {
 
     public ServerLayout() {
 
+        /**
+         * *************Test insert list of players******************
+         */
+        // DataBaseAccessLayer dao = new DataBaseAccessLayer();
+        /*Player p1 = new Player("Ahmed", "136asf", 0, "ONLINE");
+        Player p2 = new Player("Ahmed", "136asf", 0, "ONLINE");
+        Player p3 = new Player("Ahmed", "136asf", 0, "ONLINE");
+        Player p4 = new Player("Ahmed", "136asf", 0, "ONLINE");
+     
+        ArrayList<Player> players = new ArrayList<>(Arrays.asList(p1, p2, p3, p4));   
+      
+
+         dao.insertPlayers(players);   */
+
+ /* List<Player> onlinePlayers = dao.getOnlinePlayers();
+        for (Player onlinePlayer : onlinePlayers) {
+            System.out.println(onlinePlayer);  //as a hash code
+        } */
+        //updating a specific player
+        /**
+         * *********************************************************
+         */
         toggle = false;
 
         btnToggle = new ToggleButton();

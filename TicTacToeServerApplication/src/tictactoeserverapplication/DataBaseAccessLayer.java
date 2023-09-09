@@ -11,6 +11,8 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -61,6 +63,29 @@ public class DataBaseAccessLayer {
 
     }
 
+    //Insert A list of players
+    public boolean insertPlayers(List<Player> players) {
+        try {
+            String insertQuery = "INSERT INTO PLAYER (USERNAME, PASSWORD, SCORE , STATUS) VALUES (?, ?, ?, ?)";
+            PreparedStatement ps = connection.prepareStatement(insertQuery);
+
+            for (Player player : players) {
+                ps.setString(1, player.getName());
+                ps.setString(2, player.getPassword());
+                ps.setInt(3, player.getScore());
+                ps.setString(4, player.getStatus());
+                ps.addBatch();
+            }
+
+            ps.executeBatch();
+            ps.close();
+            return true;
+        } catch (SQLException ex) {
+            //Logger.getLogger(DataBaseAccessLayer.class.getName()).log(Level.SEVERE, null, ex);
+            return false;
+        }
+    }
+
     public boolean signIn(String name, String pass) {
         System.out.println(name + ":" + pass);
         try {
@@ -90,6 +115,75 @@ public class DataBaseAccessLayer {
             return false;
         }
 
+    }
+
+    //get all online players
+    public List<Player> getOnlinePlayers() {
+        List<Player> onlinePlayers = new ArrayList<>();
+        try {
+            String query = "SELECT * FROM PLAYER WHERE STATUS = 'ONLINE'";
+            PreparedStatement ps = connection.prepareStatement(query);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                Player player = new Player(rs.getString("USERNAME"),
+                        rs.getString("PASSWORD"),
+                        rs.getInt("SCORE"),
+                        rs.getString("STATUS"));
+                onlinePlayers.add(player);
+
+            }
+            rs.close();
+            ps.close();
+
+        } catch (SQLException ex) {
+            Logger.getLogger(DataBaseAccessLayer.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return onlinePlayers;
+
+    }
+
+    //return a specific player by his username
+     /* public Player getPlayerByUserName(String username) {
+        Player player = null;
+        String query = "SELECT * FROM PLAYER WHERE USERNAME = ?";
+
+        try {
+            PreparedStatement ps = connection.prepareStatement(query);
+            ps.setString(1, username);
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                String name = rs.getString("USERNAME");
+                String password = rs.getString("PASSWORD");
+                int score = rs.getInt("SCORE");
+                String status = rs.getString("STATUS");
+
+                player = new Player(name, password, score, status);
+            }
+
+            rs.close();
+            ps.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(DataBaseAccessLayer.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return player;
+    } */
+
+    //Update player status
+    public void updatePlayerStatus(int playerId, String newStatus) {
+        try {
+            String query = "UPDATE PLAYER SET STATUS = ? WHERE PLAYERID = ?";
+            PreparedStatement ps = connection.prepareStatement(query);
+            ps.setString(1, newStatus);
+            ps.setInt(2, playerId);
+            ps.executeUpdate();
+            ps.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(DataBaseAccessLayer.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     public void close() {
