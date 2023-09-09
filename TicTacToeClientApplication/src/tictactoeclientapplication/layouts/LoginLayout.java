@@ -1,8 +1,15 @@
 package tictactoeclientapplication.layouts;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
+import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
@@ -21,7 +28,7 @@ public class LoginLayout extends BorderPane {
     protected final TextField textFieldUsername;
     protected final HBox hBox0;
     protected final Text textPassword;
-    protected final TextField textFieldPassword;
+    protected final PasswordField textFieldPassword;
     protected final HBox hBox1;
     protected final Text textTitle;
     protected final HBox hBox2;
@@ -33,6 +40,7 @@ public class LoginLayout extends BorderPane {
     protected final Button btnSignIn;
 
     public LoginLayout(OnNavigation onNav) {
+        
 
         getStyleClass().add("Pane");
 
@@ -49,7 +57,7 @@ public class LoginLayout extends BorderPane {
         textHaveNot = new Text();
         textSignUp = new Text();
         textFieldUsername = new TextField();
-        textFieldPassword = new TextField();
+        textFieldPassword = new PasswordField();
         textOr = new Text();
         textGuest = new Text();
         btnSignIn = new Button("Login");
@@ -73,8 +81,24 @@ public class LoginLayout extends BorderPane {
                 ClientSocket.getInstance().say("login:" + userName + ":" + pass, (msg) -> {
 
                     if (msg.trim().equals("login-success")) {
-
-                        onNav.onNavClick("home");
+                        FileOutputStream mouth = null;
+                        try {
+                            File file = new File("auth.txt");
+                            mouth = new FileOutputStream(file);
+                            String auth = "logedin";
+                            mouth.write(auth.getBytes());
+                            onNav.onNavClick("home");
+                        } catch (FileNotFoundException ex) {
+                            Logger.getLogger(LoginLayout.class.getName()).log(Level.SEVERE, null, ex);
+                        } catch (IOException ex) {
+                            Logger.getLogger(LoginLayout.class.getName()).log(Level.SEVERE, null, ex);
+                        } finally {
+                            try {
+                                mouth.close();
+                            } catch (IOException ex) {
+                                Logger.getLogger(LoginLayout.class.getName()).log(Level.SEVERE, null, ex);
+                            }
+                        }
 
                     } else if(msg.trim().equals("login-fail")) {
                         ////dialog to show that the user is unauthenticated
@@ -83,6 +107,10 @@ public class LoginLayout extends BorderPane {
                 });
             }
         });
+        
+        
+        
+        
         btnSignIn.setPrefWidth(250);
 
         setMaxHeight(USE_PREF_SIZE);

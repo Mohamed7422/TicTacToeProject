@@ -137,3 +137,17 @@
     -fx-background-color: #FFED00;
 }
 
+
+.RoundButton {
+    -fx-background-radius: 50em;
+    -fx-background-color: transparent;
+    -fx-background-size: cover;
+}
+
+.RoundButton:hover {
+   -fx-background-color: #D3677970
+}
+
+.RoundButton:pressed {
+     -fx-background-color: #D36779;
+}

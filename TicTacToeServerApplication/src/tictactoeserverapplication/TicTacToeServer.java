@@ -79,6 +79,7 @@ class ChatHandler {
                         String[] split = msg.split(":");
                         switch (split[0]) {
                             case "login":
+                                //send to all new list of clients
                                 String name = split[1];
                                 String pass = split[2];
 
@@ -89,9 +90,12 @@ class ChatHandler {
                                 }
 
                                 break;
+                            case "logout":
+                                //change status of user in DB to "offline"
+                                //send to all new list of clients
+                                break;
                             case "signup":
                                 //signUp()
-
                                 if (signUp(split[1], split[2])) {
                                     sendToClient(id, split[0] + "-success");//or"-fail"
 
@@ -103,6 +107,10 @@ class ChatHandler {
                             case "invite":
                                 //invitation()
                                 sendToClient(id, split[0] + "-success");//or"-fail"
+                                break;
+                            case "challenge"://callenge:username
+                                //challenge()
+                                
                                 break;
                         }
 

@@ -48,6 +48,7 @@ public  class ListItemLayout extends HBox {
         challangeBtn.setTextAlignment(javafx.scene.text.TextAlignment.CENTER);
         challangeBtn.getStyleClass().add("YellowButton");
         challangeBtn.setOnAction(e->{
+            //client socket say("challenge:username");
             onNav.onNavClick("board");
         });
 

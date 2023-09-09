@@ -1,4 +1,3 @@
-
 package tictactoeclientapplication.utils;
 
 import java.io.File;
@@ -17,37 +16,47 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
-
 public class Dialog {
+
     boolean homeFlag = true;
-    
-    public void displayWinDialog(DialogClicks onClick) {
+
+    public void displayWinDialog(DialogClicks onClick, String status) {
         Stage stage = new Stage();
-        
+
         stage.initModality(Modality.APPLICATION_MODAL);
-        
+
         stage.initStyle(StageStyle.TRANSPARENT);
         stage.setResizable(false);
         AnchorPane pane = new AnchorPane();
-        
-        
-        File file = new File("lose.mp4");
+
+        File file = null;
+        if (status.equals("win")) {
+            
+        } else if (status.equals("lose")) {
+            file = new File("lose.mp4");
+        } else if (status.equals("computer-win")) {
+            //comuter dance
+            
+        }else if (status.equals("local")) {
+            //half-&-half
+            
+        }else {
+            //draw
+            
+        }
+
         Media media = new Media(file.toURI().toString());
         MediaPlayer mp = new MediaPlayer(media);
         MediaView mediaView = new MediaView(mp);
-        
         mp.setAutoPlay(true);
-        
-        
+
         stage.setOnHidden(e -> {
-            if(homeFlag){
-            mp.stop();
-            onClick.onRedBtnCkick();
+            if (homeFlag) {
+                mp.stop();
+                onClick.onRedBtnCkick();
             }
         });
-        
-        
-        
+
         HBox hBox = new HBox();
         Button btnGreen = new Button();
         Button btnRed = new Button();
@@ -78,15 +87,14 @@ public class Dialog {
         btnRed.setText("Leave");
         btnRed.setPrefWidth(150);
         btnRed.getStyleClass().add("PurpleButton");
-        
-        
+
         btnGreen.setOnAction(e -> {
             homeFlag = false;
             mp.stop();
             onClick.onGreenBtnCkick();
             stage.close();
         });
-        
+
         btnRed.setOnAction(e -> {
             mp.stop();
             onClick.onRedBtnCkick();
@@ -99,52 +107,42 @@ public class Dialog {
         pane.getChildren().add(hBox);
 
         Scene scene = new Scene(pane, 430, 300);
-        
-        scene.getStylesheets().add(getClass().getResource("Style.css").toString());
-        
-        
 
-        
+        scene.getStylesheets().add(getClass().getResource("Style.css").toString());
+
         stage.setTitle("Dialog");
         stage.setScene(scene);
         stage.show();
 
     }
-    
-    
-    public void displayWinDialog(String msg){
+
+    public void displayWinDialog(String msg) {
         Stage stage = new Stage();
-        
+
         stage.initModality(Modality.APPLICATION_MODAL);
-        
+
         stage.initStyle(StageStyle.TRANSPARENT);
         stage.setResizable(false);
         AnchorPane pane = new AnchorPane();
-        
-        
+
         /*File file = new File("lose.mp4");
         Media media = new Media(file.toURI().toString());
         MediaPlayer mp = new MediaPlayer(media);
         MediaView mediaView = new MediaView(mp);
         
         mp.setAutoPlay(true);*/
-        
-        Text txt = new Text(); 
-        
+        Text txt = new Text();
+
         txt.setText(msg);
-        
+
         txt.setFill(Color.ROSYBROWN);
-        
-        
+
         /*stage.setOnHidden(e -> {
             if(homeFlag){
             mp.stop();
             onClick.onRedBtnCkick();
             }
         });*/
-        
-        
-        
         HBox hBox = new HBox();
         Button btnGreen = new Button();
         Button btnRed = new Button();
@@ -174,12 +172,11 @@ public class Dialog {
         btnRed.setText("Leave");
         btnRed.setPrefWidth(150);
         btnRed.getStyleClass().add("PurpleButton");
-        
-        
+
         btnGreen.setOnAction(e -> {
             stage.close();
         });
-        
+
         btnRed.setOnAction(e -> {
             stage.close();
         });
@@ -190,17 +187,12 @@ public class Dialog {
         pane.getChildren().add(hBox);
 
         Scene scene = new Scene(pane, 430, 300);
-        
-        scene.getStylesheets().add(getClass().getResource("Style.css").toString());
-        
-        
 
-        
+        scene.getStylesheets().add(getClass().getResource("Style.css").toString());
+
         stage.setTitle("Dialog");
         stage.setScene(scene);
         stage.show();
     }
-    
-    
-    
+
 }

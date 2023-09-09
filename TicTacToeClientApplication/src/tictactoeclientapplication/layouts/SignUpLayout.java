@@ -5,6 +5,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
+import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
@@ -21,10 +22,10 @@ public class SignUpLayout extends BorderPane {
     protected final TextField textFieldUsername;
     protected final HBox hBox0;
     protected final Text textPassword;
-    protected final TextField textFieldPassword;
+    protected final PasswordField textFieldPassword;
     protected final HBox hBox1;
     protected final Text textConfirm;
-    protected final TextField textFieldConfirm;
+    protected final PasswordField textFieldConfirm;
     protected final Text textTitle;
     protected final HBox hBox2;
     protected final Text textAlready;
@@ -49,8 +50,8 @@ public class SignUpLayout extends BorderPane {
         textAlready = new Text();
         textLogin = new Text();
         textFieldUsername = new TextField();
-        textFieldPassword = new TextField();
-        textFieldConfirm = new TextField();
+        textFieldPassword = new PasswordField();
+        textFieldConfirm = new PasswordField();
         btnSignUp = new Button("Create Account");
 
         //Background background1 = new Background(new BackgroundFill(Color.valueOf("#A94064"), new CornerRadii(10), new Insets(10)));

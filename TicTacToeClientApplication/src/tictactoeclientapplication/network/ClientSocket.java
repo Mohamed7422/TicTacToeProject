@@ -52,7 +52,7 @@ public class ClientSocket {
         }
     }
 
-    public void startListen() {
+    public void startListen(){
         thread = new Thread(()-> {
             try {
                 while (true) {
@@ -64,6 +64,7 @@ public class ClientSocket {
                 }
             } catch (IOException ex) {
                 System.out.println("listening error");
+                //throw ex;
             }finally{
                 closeEveryThing();
                 System.out.println("connection closed");
