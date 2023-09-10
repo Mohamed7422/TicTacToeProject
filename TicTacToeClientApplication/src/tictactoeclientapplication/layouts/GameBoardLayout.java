@@ -14,6 +14,7 @@ import javafx.scene.text.Text;
 import tictactoeclientapplication.utils.Dialog;
 import tictactoeclientapplication.utils.DialogClicks;
 import tictactoeclientapplication.utils.OnNavigation;
+import tictactoeclientapplication.utils.ProgressIndicatorClass;
 
 public class GameBoardLayout extends BorderPane implements DialogClicks {
 
@@ -220,7 +221,9 @@ public class GameBoardLayout extends BorderPane implements DialogClicks {
         }
 
         //some editing is needed here
-        new Dialog().displayWinDialog(this, "lose");
+         new Dialog().displayWinDialog(this, "lose");
+        //new Dialog().displayTextDialog(this, "lose","Loser");
+        //new ProgressIndicatorClass().showProgressDialog(true);
     }
 
     @Override

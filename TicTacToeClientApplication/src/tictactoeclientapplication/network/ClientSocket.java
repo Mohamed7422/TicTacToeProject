@@ -39,8 +39,8 @@ public class ClientSocket {
     public void openConnection() throws IOException {
         try {
 
-            //sc = new Socket("192.168.137.1", 5000);
-            sc = new Socket("192.168.1.9", 5000);
+            sc = new Socket("192.168.1.3", 5000);
+            //sc = new Socket("192.168.1.9", 5000);
 
             ear = new DataInputStream(sc.getInputStream());
             mouth = new PrintStream(sc.getOutputStream());

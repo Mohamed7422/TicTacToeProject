@@ -151,3 +151,11 @@
 .RoundButton:pressed {
      -fx-background-color: #D36779;
 }
+
+#dialogWithText{
+    -fx-font:bold 4em "Snap ITC";
+    -fx-alignment: center;
+    -fx-text-align: center;
+    
+    
+}
