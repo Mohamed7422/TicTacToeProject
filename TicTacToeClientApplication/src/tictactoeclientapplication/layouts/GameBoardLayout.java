@@ -142,6 +142,7 @@ public class GameBoardLayout extends BorderPane implements DialogClicks {
                             int x, y;
                             x = new Random().nextInt(3 + 0) + 0;
                             y = new Random().nextInt(3 + 0) + 0;
+                            
                             while (!gameBoardButton[x][y].getText().equals("")) {
                                 x = new Random().nextInt(3 + 0) + 0;
                                 y = new Random().nextInt(3 + 0) + 0;

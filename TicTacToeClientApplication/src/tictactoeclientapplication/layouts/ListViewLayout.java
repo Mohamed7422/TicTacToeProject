@@ -19,6 +19,7 @@ import javafx.scene.layout.Priority;
 import tictactoeclientapplication.utils.OnNavigation;
 import tictactoeclientapplication.data.Player;
 import tictactoeclientapplication.layouts.listview.PlayerCellFactory;
+import tictactoeclientapplication.network.ClientSocket;
 
 public class ListViewLayout extends BorderPane {
 
@@ -27,8 +28,31 @@ public class ListViewLayout extends BorderPane {
     Button logoutButton;
 
     public ListViewLayout(OnNavigation onNav) {
-        //the list online clients from DB of server
         ObservableList<Player> playerList = FXCollections.observableArrayList();
+        if (!ClientSocket.getInstance().isConnected()) {
+            try {
+                ClientSocket.getInstance().openConnection();
+            } catch (IOException ex) {
+                //dialog to show that there is connection error
+                System.out.println("client: connection error");
+            }
+        }
+        if (ClientSocket.getInstance().isConnected()) {
+            ClientSocket.getInstance().say("get-players", (msg) -> {
+                String[] split = msg.split(":");
+                if (split[0].equals("get-players-success")) {
+                    for(int i = 1 ; i<split.length;i++){
+                        playerList.add(new Player(split[i], 50, "online"));
+                    }
+                } else if (split[0].equals("get-players-fail")) {
+                    System.out.println("no players found");
+                }
+
+            });
+        }
+
+        //the list online clients from DB of server
+        /*ObservableList<Player> playerList = FXCollections.observableArrayList();
         playerList.add(new Player("ahmed", 50, "online"));
         playerList.add(new Player("aly", 65, "online"));
         playerList.add(new Player("mohammed", 64, "offline"));
@@ -48,7 +72,7 @@ public class ListViewLayout extends BorderPane {
         playerList.add(new Player("aly", 65, "online"));
         playerList.add(new Player("mohammed", 64, "offline"));
         playerList.add(new Player("hany", 48, "in game"));
-        playerList.add(new Player("samty", 12, "in game"));
+        playerList.add(new Player("samty", 12, "in game"));*/
 
         listView = new ListView<>(playerList);
 
