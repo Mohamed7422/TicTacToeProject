@@ -18,6 +18,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import tictactoeclientapplication.network.ClientSocket;
 import tictactoeclientapplication.utils.OnNavigation;
+import tictactoeclientapplication.utils.ProgressIndicatorClass;
 
 public class LoginLayout extends BorderPane {
 
@@ -38,6 +39,8 @@ public class LoginLayout extends BorderPane {
     protected final Text textOr;
     protected final Text textGuest;
     protected final Button btnSignIn;
+    protected final ProgressIndicatorClass progIndicator;
+    
 
     public LoginLayout(OnNavigation onNav) {
         
@@ -61,6 +64,7 @@ public class LoginLayout extends BorderPane {
         textOr = new Text();
         textGuest = new Text();
         btnSignIn = new Button("Login");
+         progIndicator=new ProgressIndicatorClass();
 
         //Background background1 = new Background(new BackgroundFill(Color.valueOf("#A94064"), new CornerRadii(10), new Insets(10)));
         btnSignIn.setPrefHeight(50.0);
@@ -69,6 +73,7 @@ public class LoginLayout extends BorderPane {
         btnSignIn.setOnAction((e) -> {
             String userName = textFieldUsername.getText().trim();
             String pass = textFieldPassword.getText().trim();
+            //progIndicator.showProgressDialog(true);
             if (!ClientSocket.getInstance().isConnected()) {
                 try {
                     ClientSocket.getInstance().openConnection();
@@ -79,7 +84,7 @@ public class LoginLayout extends BorderPane {
             }
             if (ClientSocket.getInstance().isConnected()) {
                 ClientSocket.getInstance().say("login:" + userName + ":" + pass, (msg) -> {
-
+                      //progIndicator.showProgressDialog(true);
                     if (msg.trim().equals("login-success")) {
                         FileOutputStream mouth = null;
                         try {
@@ -87,7 +92,9 @@ public class LoginLayout extends BorderPane {
                             mouth = new FileOutputStream(file);
                             String auth = "logedin";
                             mouth.write(auth.getBytes());
+                            //progIndicator.showProgressDialog(false);
                             onNav.onNavClick("home");
+                             
                         } catch (FileNotFoundException ex) {
                             Logger.getLogger(LoginLayout.class.getName()).log(Level.SEVERE, null, ex);
                         } catch (IOException ex) {
