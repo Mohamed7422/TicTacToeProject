@@ -107,7 +107,7 @@ class ChatHandler {
 
                                 break;
                             case "get-players":
-                                getOnlinePlayers(6,"Offline");//change hanaa's status to offline
+                                getOnlinePlayers("hanaa","Offline");//change hanaa's status to offline
                                 List<Player> list = getOnlinePlayers();
                                 String response = split[0]+"-success";
                                 for(Player p : list){
@@ -191,7 +191,7 @@ class ChatHandler {
         return new DataBaseAccessLayer().getOnlinePlayers();
     }
     
-    private boolean getOnlinePlayers(int id,String Status){
-        return new DataBaseAccessLayer().updatePlayerStatus(id, Status);
+    private boolean getOnlinePlayers(String username,String Status){
+        return new DataBaseAccessLayer().updatePlayerStatus(username, Status);
     }
 }

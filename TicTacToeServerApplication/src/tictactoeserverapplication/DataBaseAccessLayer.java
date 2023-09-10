@@ -173,12 +173,12 @@ public class DataBaseAccessLayer {
         return player;
     } */
     //Update player status
-    public boolean updatePlayerStatus(int playerId, String newStatus) {
+    public boolean updatePlayerStatus(String username, String newStatus) {
         try {
-            String query = "UPDATE PLAYER SET STATUS = ? WHERE PLAYERID = ?";
+            String query = "UPDATE PLAYER SET STATUS = ? WHERE USERNAME = ?";
             PreparedStatement ps = connection.prepareStatement(query);
             ps.setString(1, newStatus);
-            ps.setInt(2, playerId);
+            ps.setString(2, username);
             ps.executeUpdate();
             ps.close();
             return true;
