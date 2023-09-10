@@ -121,7 +121,7 @@ public class DataBaseAccessLayer {
     public List<Player> getOnlinePlayers() {
         List<Player> onlinePlayers = new ArrayList<>();
         try {
-            String query = "SELECT * FROM PLAYER WHERE STATUS = 'ONLINE'";
+            String query = "SELECT * FROM PLAYER WHERE STATUS = 'Online'";
             PreparedStatement ps = connection.prepareStatement(query);
             ResultSet rs = ps.executeQuery();
 
@@ -133,6 +133,7 @@ public class DataBaseAccessLayer {
                 onlinePlayers.add(player);
 
             }
+            System.out.println("get players from dao:" + onlinePlayers.size());
             rs.close();
             ps.close();
 
@@ -145,7 +146,7 @@ public class DataBaseAccessLayer {
     }
 
     //return a specific player by his username
-     /* public Player getPlayerByUserName(String username) {
+    /* public Player getPlayerByUserName(String username) {
         Player player = null;
         String query = "SELECT * FROM PLAYER WHERE USERNAME = ?";
 
@@ -171,9 +172,8 @@ public class DataBaseAccessLayer {
 
         return player;
     } */
-
     //Update player status
-    public void updatePlayerStatus(int playerId, String newStatus) {
+    public boolean updatePlayerStatus(int playerId, String newStatus) {
         try {
             String query = "UPDATE PLAYER SET STATUS = ? WHERE PLAYERID = ?";
             PreparedStatement ps = connection.prepareStatement(query);
@@ -181,8 +181,10 @@ public class DataBaseAccessLayer {
             ps.setInt(2, playerId);
             ps.executeUpdate();
             ps.close();
+            return true;
         } catch (SQLException ex) {
             Logger.getLogger(DataBaseAccessLayer.class.getName()).log(Level.SEVERE, null, ex);
+            return false;
         }
     }
 

@@ -6,6 +6,7 @@ import java.io.PrintStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -93,6 +94,7 @@ class ChatHandler {
                             case "logout":
                                 //change status of user in DB to "offline"
                                 //send to all new list of clients
+                                //getOnlinePlayers(1,"Online");
                                 break;
                             case "signup":
                                 //signUp()
@@ -103,6 +105,21 @@ class ChatHandler {
                                     sendToClient(id, split[0] + "-fail");
                                 }
 
+                                break;
+                            case "get-players":
+                                getOnlinePlayers(6,"Offline");//change hanaa's status to offline
+                                List<Player> list = getOnlinePlayers();
+                                String response = split[0]+"-success";
+                                for(Player p : list){
+                                    response += ":"+p.getName();
+                                }
+                                System.out.println(response);
+                                if(list.size()!=0){
+                                    sendToClient(id, response);
+                                }else{
+                                    sendToClient(id, split[0] + "-fail");
+                                }
+                                
                                 break;
                             case "invite":
                                 //invitation()
@@ -168,5 +185,13 @@ class ChatHandler {
     private boolean login(String name, String pass) {
         return new DataBaseAccessLayer().signIn(name, pass);
 
+    }
+    
+    private List<Player> getOnlinePlayers(){
+        return new DataBaseAccessLayer().getOnlinePlayers();
+    }
+    
+    private boolean getOnlinePlayers(int id,String Status){
+        return new DataBaseAccessLayer().updatePlayerStatus(id, Status);
     }
 }
