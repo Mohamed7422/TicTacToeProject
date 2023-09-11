@@ -79,22 +79,55 @@ class ChatHandler {
                         System.out.println(msg);
                         String[] split = msg.split(":");
                         switch (split[0]) {
-                            case "login":
+                            case "login"://login:m7md:123456
                                 //send to all new list of clients
                                 String name = split[1];
                                 String pass = split[2];
 
                                 if (login(name, pass)) {
                                     sendToClient(id, split[0] + "-success");//or"-fail"
+                                    //change status here
+                                    changeStatusOfPlayer(name, "Online");
+                                    List<Player> list = getOnlinePlayers();
+                                    String response = "get-players-success";
+                                    for (Player p : list) {
+                                        response += ":" + p.getName();
+                                    }
+                                    System.out.println(response);
+                                    if (list.size() != 0) {
+                                        sendToAllClients(response);
+                                    } else {
+                                        sendToAllClients("get-players-fail");
+                                    }
                                 } else {
                                     sendToClient(id, split[0] + "-fail");
                                 }
 
                                 break;
-                            case "logout":
+                            case "test":
+                                System.out.println("i'm here to test");
+                                sendToAllClients("test send to all");
+                                break;
+                            case "logout":////logout:ahmed
+                                System.out.println("from server: " +msg);
                                 //change status of user in DB to "offline"
                                 //send to all new list of clients
                                 //getOnlinePlayers(1,"Online");
+                                
+                                changeStatusOfPlayer(split[1], "Offline");
+                                List<Player> list = getOnlinePlayers();
+                                String response = "get-players-success";
+                                for (Player p : list) {
+                                    response += ":" + p.getName();
+                                }
+                                System.out.println(response);
+                                if (list.size() != 0) {
+                                    System.out.println("hello:  "+response);
+                                    sendToAllClients(response);
+                                } else {
+                                    sendToAllClients("get-players-fail");
+                                }
+
                                 break;
                             case "signup":
                                 //signUp()
@@ -107,19 +140,19 @@ class ChatHandler {
 
                                 break;
                             case "get-players":
-                                getOnlinePlayers("hanaa","Offline");//change hanaa's status to offline
-                                List<Player> list = getOnlinePlayers();
-                                String response = split[0]+"-success";
-                                for(Player p : list){
-                                    response += ":"+p.getName();
+                                //getOnlinePlayers("hanaa", "Offline");//change hanaa's status to offline
+                                List<Player> list1 = getOnlinePlayers();
+                                String response1 = split[0] + "-success";
+                                for (Player p : list1) {
+                                    response1 += ":" + p.getName();
                                 }
-                                System.out.println(response);
-                                if(list.size()!=0){
-                                    sendToClient(id, response);
-                                }else{
+                                System.out.println(response1);
+                                if (list1.size() != 0) {
+                                    sendToClient(id, response1);
+                                } else {
                                     sendToClient(id, split[0] + "-fail");
                                 }
-                                
+
                                 break;
                             case "invite":
                                 //invitation()
@@ -127,7 +160,7 @@ class ChatHandler {
                                 break;
                             case "challenge"://callenge:username
                                 //challenge()
-                                
+
                                 break;
                         }
 
@@ -186,12 +219,13 @@ class ChatHandler {
         return new DataBaseAccessLayer().signIn(name, pass);
 
     }
-    
-    private List<Player> getOnlinePlayers(){
+
+    private List<Player> getOnlinePlayers() {
         return new DataBaseAccessLayer().getOnlinePlayers();
     }
-    
-    private boolean getOnlinePlayers(String username,String Status){
+
+    private boolean changeStatusOfPlayer(String username, String Status) {
         return new DataBaseAccessLayer().updatePlayerStatus(username, Status);
     }
+
 }

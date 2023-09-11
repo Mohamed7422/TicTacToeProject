@@ -1,11 +1,13 @@
 package tictactoeclientapplication.layouts;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.Button;
@@ -23,12 +25,14 @@ import tictactoeclientapplication.network.ClientSocket;
 
 public class ListViewLayout extends BorderPane {
 
-    protected final ListView listView;
+    ListView listView;
     Button backButton;
     Button logoutButton;
 
     public ListViewLayout(OnNavigation onNav) {
+
         ObservableList<Player> playerList = FXCollections.observableArrayList();
+        listView = new ListView<>(playerList);
         if (!ClientSocket.getInstance().isConnected()) {
             try {
                 ClientSocket.getInstance().openConnection();
@@ -38,12 +42,30 @@ public class ListViewLayout extends BorderPane {
             }
         }
         if (ClientSocket.getInstance().isConnected()) {
-            ClientSocket.getInstance().say("get-players", (msg) -> {
+            ClientSocket.getInstance().say("get-players", (msg) -> {//get-players-success:ahmed
+                System.out.println(msg);
+                System.out.println(msg.substring(0, 4));
+                if (msg.substring(0, 4).trim().equals("user")) {
+                    msg = msg.replace(msg.split(":")[0] + ":", "");
+                    System.out.println("bey:  " + msg);
+                }
+                System.out.println("tessssst:  " + msg);
                 String[] split = msg.split(":");
-                if (split[0].equals("get-players-success")) {
-                    for(int i = 1 ; i<split.length;i++){
-                        playerList.add(new Player(split[i], 50, "online"));
-                    }
+                if (split[0].trim().equals("get-players-success")) {
+                    System.out.println("tessssst 1");
+
+                    Platform.runLater(new Runnable() {
+                        @Override
+                        public void run() {
+                            playerList.clear();
+                            for (int i = 1; i < split.length; i++) {
+
+                                playerList.add(new Player(split[i], 50, "online"));
+                                System.out.println("tessssst list : " + playerList.size());
+                            }
+                        }
+                    });
+
                 } else if (split[0].equals("get-players-fail")) {
                     System.out.println("no players found");
                 }
@@ -73,10 +95,15 @@ public class ListViewLayout extends BorderPane {
         playerList.add(new Player("mohammed", 64, "offline"));
         playerList.add(new Player("hany", 48, "in game"));
         playerList.add(new Player("samty", 12, "in game"));*/
-
-        listView = new ListView<>(playerList);
-
+        //listView = new ListView<>(playerList);
         listView.setFocusTraversable(false);
+        listView.setCellFactory(new PlayerCellFactory(onNav));
+        listView.setDisable(false);
+        BorderPane.setAlignment(listView, javafx.geometry.Pos.CENTER);
+        listView.setPrefHeight(200.0);
+        listView.setPrefWidth(200.0);
+        setCenter(listView);
+
         backButton = new Button();
         logoutButton = new Button();
 
@@ -91,10 +118,22 @@ public class ListViewLayout extends BorderPane {
         ImageView view1 = new ImageView(img1);
         logoutButton.setGraphic(view1);
         logoutButton.setOnAction(e -> {
+            //playerList.add(new Player("test", 50, "online"));
+            FileInputStream ear = null;
             FileOutputStream mouth = null;
             try {
-                //start loading
                 File file = new File("auth.txt");
+
+                ear = new FileInputStream(file);
+                byte[] b = new byte[ear.available()];
+                ear.read(b);
+                //String authed = new String(b);
+                String req = new String(b).replace("logedin", "logout");//logout:ahmed
+                System.out.println(req);
+                ClientSocket.getInstance().say(req, (msg) -> {
+                });
+
+                //start loading
                 mouth = new FileOutputStream(file);
                 String auth = "logedout";
                 mouth.write(auth.getBytes());
@@ -114,6 +153,7 @@ public class ListViewLayout extends BorderPane {
                 }
             }
             //onNav.onNavClick("login");
+
         }
         );
         logoutButton.getStyleClass().addAll("RoundButton");
@@ -135,13 +175,6 @@ public class ListViewLayout extends BorderPane {
         left.getChildren().add(backButton);
         right.getChildren().add(logoutButton);
 
-        listView.setCellFactory(new PlayerCellFactory(onNav));
-        listView.setDisable(false);
-
-        BorderPane.setAlignment(listView, javafx.geometry.Pos.CENTER);
-        listView.setPrefHeight(200.0);
-        listView.setPrefWidth(200.0);
-        setCenter(listView);
         setTop(hBox);
 
     }
