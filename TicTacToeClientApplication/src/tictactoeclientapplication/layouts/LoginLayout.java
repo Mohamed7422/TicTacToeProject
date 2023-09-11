@@ -98,7 +98,7 @@ public class LoginLayout extends BorderPane implements DialogClicks {
                         try {
                             File file = new File("auth.txt");
                             mouth = new FileOutputStream(file);
-                            String auth = "logedin";
+                            String auth = "logedin:"+userName;
                             mouth.write(auth.getBytes());
                             //progIndicator.showProgressDialog(false);
                             onNav.onNavClick("home");

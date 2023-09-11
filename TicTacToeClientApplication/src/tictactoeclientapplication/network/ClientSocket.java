@@ -18,8 +18,6 @@ public class ClientSocket {
 
     private static ClientSocket instance;
 
-    private static boolean isConnected;
-
     private static Socket sc;
     private static DataInputStream ear;
     private static PrintStream mouth;
@@ -40,10 +38,9 @@ public class ClientSocket {
     public void openConnection() throws IOException {
         //ProgressIndicatorClass.show();
         try {
-
-            sc = new Socket("192.168.137.1", 5000);
-            //sc = new Socket("192.168.1.9", 5000);
-
+            //sc = new Socket("192.168.1.3", 5000);
+            sc = new Socket("192.168.1.9", 5000);
+            //sc = new Socket("156.196.113.64", 5000);
             ear = new DataInputStream(sc.getInputStream());
             mouth = new PrintStream(sc.getOutputStream());
             System.out.println("client: connected");
@@ -56,7 +53,7 @@ public class ClientSocket {
         }
     }
 
-    public void startListen(){
+    private void startListen(){
         thread = new Thread(()-> {
             try {
                 while (true) {
