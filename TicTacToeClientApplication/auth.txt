@@ -1,1 +1,1 @@
-logedin
+logedout

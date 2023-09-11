@@ -48,7 +48,7 @@ public class TicTacToeClientApplication extends Application implements OnNavigat
             ear = new FileInputStream(f);
             byte[] b = new byte[ear.available()];
             ear.read(b);
-            authed = new String(b);
+            authed = new String(b).split(":")[0];
             System.out.println(authed);
             if(authed.trim().equals("logedin")){
                 System.out.println("i am loged");
