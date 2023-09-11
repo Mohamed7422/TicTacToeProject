@@ -12,6 +12,7 @@ import java.net.Socket;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import tictactoeclientapplication.utils.OnResponse;
+import tictactoeclientapplication.utils.ProgressIndicatorClass;
 
 public class ClientSocket {
 
@@ -37,17 +38,20 @@ public class ClientSocket {
     }
 
     public void openConnection() throws IOException {
+        //ProgressIndicatorClass.show();
         try {
 
-            sc = new Socket("192.168.1.3", 5000);
+            sc = new Socket("192.168.137.1", 5000);
             //sc = new Socket("192.168.1.9", 5000);
 
             ear = new DataInputStream(sc.getInputStream());
             mouth = new PrintStream(sc.getOutputStream());
             System.out.println("client: connected");
-
+            //ProgressIndicatorClass.dismiss();
+            
             startListen();
         } catch (IOException ex) {
+            //ProgressIndicatorClass.dismiss();
             throw ex;
         }
     }

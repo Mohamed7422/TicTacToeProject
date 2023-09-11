@@ -13,6 +13,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import tictactoeclientapplication.utils.Dialog;
 import tictactoeclientapplication.utils.DialogClicks;
+import tictactoeclientapplication.utils.MediumLevel;
 import tictactoeclientapplication.utils.OnNavigation;
 import tictactoeclientapplication.utils.ProgressIndicatorClass;
 
@@ -28,6 +29,8 @@ public class GameBoardLayout extends BorderPane implements DialogClicks {
     VBox vBox;
 
     public GameBoardLayout(OnNavigation onNav, String typeOfGame) {
+        
+        
         this.onNav = onNav;
         gameBoardButton = new Button[3][3];
         playerName = "X";
@@ -64,6 +67,7 @@ public class GameBoardLayout extends BorderPane implements DialogClicks {
             player2.setText("computer");
             //needed to be changed with min-max algorithm
             createButtonsComputer(gridPane);
+            
 
         } else if (typeOfGame.equals("local")) {
             player1.setText("Player 1");
@@ -222,7 +226,7 @@ public class GameBoardLayout extends BorderPane implements DialogClicks {
 
         //some editing is needed here
          new Dialog().displayWinDialog(this, "lose");
-        //new Dialog().displayTextDialog(this, "lose","Loser");
+        //new Dialog().displayTextDialog(this,"Do u want to play again");
         //new ProgressIndicatorClass().showProgressDialog(true);
     }
 

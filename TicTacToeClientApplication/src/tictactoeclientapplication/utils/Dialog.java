@@ -9,6 +9,7 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import static javafx.scene.layout.Region.USE_PREF_SIZE;
+import javafx.scene.layout.StackPane;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
@@ -120,28 +121,18 @@ public class Dialog {
 
 
 
-    public void displayTextDialog(DialogClicks onClick, String status,String msg) {
+    public void displayTextDialog(DialogClicks onClick,String msg) {
         Stage stage = new Stage();
         
         stage.initModality(Modality.APPLICATION_MODAL);
 
         stage.initStyle(StageStyle.TRANSPARENT);
         stage.setResizable(false);
-        AnchorPane pane = new AnchorPane();
+        StackPane pane = new StackPane();
         Label txt = new Label(msg);
         txt.setId("dialogWithText");
-        txt.setText(msg);
+        
         txt.setAlignment(Pos.CENTER);
-        
-        
-        if (status.equals("win")) {
-
-        } else if (status.equals("lose")) {
-           
-        }
-
-        
-
         stage.setOnHidden(e -> {
             if (homeFlag) {
                 
@@ -151,7 +142,7 @@ public class Dialog {
 
         HBox hBox = new HBox();
         Button btnGreen = new Button();
-        Button btnRed = new Button();
+        //Button btnRed = new Button();
 
         pane.setMaxHeight(USE_PREF_SIZE);
         pane.setMaxWidth(USE_PREF_SIZE);
@@ -159,25 +150,26 @@ public class Dialog {
         pane.setMinWidth(USE_PREF_SIZE);
         pane.setPrefHeight(200.0);
         pane.setPrefWidth(500.0);
-
+        
      
 
-        hBox.setAlignment(javafx.geometry.Pos.CENTER);
+        hBox.setAlignment(javafx.geometry.Pos.BOTTOM_CENTER);
         hBox.setLayoutY(100.0);
         hBox.setPrefHeight(50.0);
         hBox.setPrefWidth(430.0);
-       hBox.setSpacing(100.0);
+        hBox.setSpacing(100.0);
 
         btnGreen.setMnemonicParsing(false);
-        btnGreen.setText("Play Again");
-        btnGreen.setPrefWidth(150);
+        btnGreen.setText("Try Again");
+        //btnGreen.setPrefWidth(300);
         btnGreen.getStyleClass().add("GreenButton");
         HBox.setMargin(btnGreen, new Insets(0.0));
+       
 
-        btnRed.setMnemonicParsing(false);
-        btnRed.setText("Leave");
-        btnRed.setPrefWidth(150);
-        btnRed.getStyleClass().add("PurpleButton");
+//        btnRed.setMnemonicParsing(false);
+//        btnRed.setText("Leave");
+//        btnRed.setPrefWidth(150);
+//        btnRed.getStyleClass().add("PurpleButton");
 
         btnGreen.setOnAction(e -> {
             homeFlag = false;
@@ -186,17 +178,18 @@ public class Dialog {
             stage.close();
         });
 
-        btnRed.setOnAction(e -> {
-         
-            onClick.onRedBtnCkick();
-            stage.close();
-        });
+//        btnRed.setOnAction(e -> {
+//         
+//            onClick.onRedBtnCkick();
+//            stage.close();
+//        });
 
         pane.getChildren().add(txt);
+        
         hBox.getChildren().add(btnGreen);
-        hBox.getChildren().add(btnRed);
+        //hBox.getChildren().add(btnRed);
         pane.getChildren().add(hBox);
-
+        pane.setStyle("-fx-background-radius: 10px;");
         Scene scene = new Scene(pane, 430, 200);
 
         scene.getStylesheets().add(getClass().getResource("Style.css").toString());

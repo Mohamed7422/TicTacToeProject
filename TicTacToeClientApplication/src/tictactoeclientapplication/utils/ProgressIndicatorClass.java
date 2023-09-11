@@ -22,10 +22,11 @@ import javafx.stage.StageStyle;
  */
 public class ProgressIndicatorClass {
 
-    double increse = 0;
+    //double increse = 0;
+    static Stage stage;
 
-    public void showProgressDialog(boolean visible) {
-        Stage stage = new Stage();
+    public static void show() {
+        stage = new Stage();
 
         stage.initModality(Modality.APPLICATION_MODAL);
 
@@ -41,6 +42,7 @@ public class ProgressIndicatorClass {
         TilePane r = new TilePane();
 
         // action event
+        /*
         EventHandler<ActionEvent> event = new EventHandler<ActionEvent>() {
             public void handle(ActionEvent e) {
                 // set progress to different level of progressindicator
@@ -48,22 +50,29 @@ public class ProgressIndicatorClass {
                 progressIndicator.setProgress(increse);
             }
         };
-
-        //progressIndicator.setVisible(false);
-        if (visible) {
-            progressIndicator.setVisible(true);
-        } if(visible==false) {
-            progressIndicator.setVisible(false);
-        }
+        */
 
         //Get value of ProgressIndicator
-        Double progress = progressIndicator.getProgress();
-        System.out.println("Current Progress: " + progress);
+        //Double progress = progressIndicator.getProgress();
+        //System.out.println("Current Progress: " + progress);
         r.getChildren().add(progressIndicator);
         r.setAlignment(Pos.CENTER);
         Scene scene = new Scene(r, 100, 100);
         stage.setTitle("Dialog");
         stage.setScene(scene);
-        stage.show();
+
+        //progressIndicator.setVisible(false);
+      
+            progressIndicator.setVisible(true);
+            stage.show();
+       
+         
+    }
+    
+    public static void dismiss(){
+        if(stage!=null){
+            stage.close();
+        }
+        
     }
 }
