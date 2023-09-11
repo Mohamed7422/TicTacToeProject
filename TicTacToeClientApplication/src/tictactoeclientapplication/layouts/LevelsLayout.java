@@ -1,5 +1,7 @@
 package tictactoeclientapplication.layouts;
 
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.geometry.Orientation;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
@@ -53,10 +55,9 @@ public class LevelsLayout extends BorderPane {
         backButton.setPrefSize(30, 30);
 
         btnEasy.setOnAction(e -> onNav.onNavClick("board"));
-        //btnMed.setOnAction(e -> onNav.onNavClick("board"));
+
         btnMed.setOnAction(e -> {
             ClientSocket.getInstance().say("test:test", (msg)->{});
-        
         });
         btnHard.setOnAction(e -> onNav.onNavClick("board"));
         backButton.setOnAction(e -> onNav.onNavClick("home"));

@@ -7,6 +7,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
@@ -17,10 +18,12 @@ import static javafx.scene.layout.Region.USE_PREF_SIZE;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import tictactoeclientapplication.network.ClientSocket;
+import tictactoeclientapplication.utils.Dialog;
+import tictactoeclientapplication.utils.DialogClicks;
 import tictactoeclientapplication.utils.OnNavigation;
 import tictactoeclientapplication.utils.ProgressIndicatorClass;
 
-public class LoginLayout extends BorderPane {
+public class LoginLayout extends BorderPane implements DialogClicks {
 
     protected final VBox vBox;
     protected final VBox vBox0;
@@ -39,14 +42,13 @@ public class LoginLayout extends BorderPane {
     protected final Text textOr;
     protected final Text textGuest;
     protected final Button btnSignIn;
-    protected final ProgressIndicatorClass progIndicator;
-    
+
+    OnNavigation onNav;
 
     public LoginLayout(OnNavigation onNav) {
-        
 
         getStyleClass().add("Pane");
-
+        this.onNav = onNav;
         vBox = new VBox();
         vBox0 = new VBox();
         hBox = new HBox();
@@ -64,27 +66,33 @@ public class LoginLayout extends BorderPane {
         textOr = new Text();
         textGuest = new Text();
         btnSignIn = new Button("Login");
-         progIndicator=new ProgressIndicatorClass();
 
         //Background background1 = new Background(new BackgroundFill(Color.valueOf("#A94064"), new CornerRadii(10), new Insets(10)));
         btnSignIn.setPrefHeight(50.0);
         btnSignIn.setPrefWidth(200.0);
         btnSignIn.getStyleClass().add("PinkButton");
         btnSignIn.setOnAction((e) -> {
+            //ProgressIndicatorClass.show();
             String userName = textFieldUsername.getText().trim();
             String pass = textFieldPassword.getText().trim();
-            //progIndicator.showProgressDialog(true);
+           
             if (!ClientSocket.getInstance().isConnected()) {
+                //ProgressIndicatorClass.show();
+                
                 try {
                     ClientSocket.getInstance().openConnection();
+                    //ProgressIndicatorClass.dismiss();
                 } catch (IOException ex) {
                     //dialog to show that there is connection error
+                    //ProgressIndicatorClass.dismiss();
+                    //new Dialog().displayTextDialog(this, "connection error");
                     System.out.println("client: connection error");
+
                 }
             }
             if (ClientSocket.getInstance().isConnected()) {
                 ClientSocket.getInstance().say("login:" + userName + ":" + pass, (msg) -> {
-                      //progIndicator.showProgressDialog(true);
+                    //HanaaprogIndicator.showProgressDialog(true);
                     if (msg.trim().equals("login-success")) {
                         FileOutputStream mouth = null;
                         try {
@@ -94,7 +102,7 @@ public class LoginLayout extends BorderPane {
                             mouth.write(auth.getBytes());
                             //progIndicator.showProgressDialog(false);
                             onNav.onNavClick("home");
-                             
+
                         } catch (FileNotFoundException ex) {
                             Logger.getLogger(LoginLayout.class.getName()).log(Level.SEVERE, null, ex);
                         } catch (IOException ex) {
@@ -107,17 +115,15 @@ public class LoginLayout extends BorderPane {
                             }
                         }
 
-                    } else if(msg.trim().equals("login-fail")) {
+                    } else if (msg.trim().equals("login-fail")) {
                         ////dialog to show that the user is unauthenticated
+                        new Dialog().displayTextDialog(this, " unauthenticated");
                         System.out.println("client: unauthenticated");
                     }
                 });
             }
         });
-        
-        
-        
-        
+
         btnSignIn.setPrefWidth(250);
 
         setMaxHeight(USE_PREF_SIZE);
@@ -232,5 +238,15 @@ public class LoginLayout extends BorderPane {
 
         vBox0.getChildren().addAll(hBox2, hBox3);
 
+    }
+
+    @Override
+    public void onGreenBtnCkick() {
+        onNav.onNavClick("login");
+    }
+
+    @Override
+    public void onRedBtnCkick() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

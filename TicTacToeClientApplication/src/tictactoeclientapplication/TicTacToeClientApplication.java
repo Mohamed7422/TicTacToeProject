@@ -21,6 +21,7 @@ import javafx.application.Application;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import tictactoeclientapplication.utils.ProgressIndicatorClass;
 
 public class TicTacToeClientApplication extends Application implements OnNavigation {
 
@@ -37,6 +38,7 @@ public class TicTacToeClientApplication extends Application implements OnNavigat
 
     @Override
     public void start(Stage stage) throws Exception {
+        //ProgressIndicatorClass.show();
         this.stage = stage;
         
         Parent root = null;
