@@ -5,10 +5,12 @@
  */
 package tictactoeclientapplication.utils;
 
+import tictactoeclientapplication.data.Game;
+
 /**
  *
  * @author mohan
  */
 public interface OnNavigation {
-    void onNavClick(String des);
+    void onNavClick(String des,Game game);
 }

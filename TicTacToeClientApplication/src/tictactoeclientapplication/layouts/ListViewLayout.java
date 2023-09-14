@@ -1,16 +1,22 @@
 package tictactoeclientapplication.layouts;
 
+import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.net.Socket;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -18,84 +24,88 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
+import static javafx.scene.layout.Region.USE_PREF_SIZE;
+import javafx.scene.layout.StackPane;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import tictactoeclientapplication.utils.OnNavigation;
 import tictactoeclientapplication.data.Player;
 import tictactoeclientapplication.layouts.listview.PlayerCellFactory;
 import tictactoeclientapplication.network.ClientSocket;
+import tictactoeclientapplication.utils.Dialog;
+import tictactoeclientapplication.utils.DialogClicks;
 
 public class ListViewLayout extends BorderPane {
 
-    ListView listView;
+    static ListView listView;
+    static ObservableList<Player> playerList;
     Button backButton;
     Button logoutButton;
+    Thread th;
 
     public ListViewLayout(OnNavigation onNav) {
-
-        ObservableList<Player> playerList = FXCollections.observableArrayList();
+        playerList = FXCollections.observableArrayList();
         listView = new ListView<>(playerList);
         if (!ClientSocket.getInstance().isConnected()) {
             try {
                 ClientSocket.getInstance().openConnection();
+                System.out.println("ListViewLayout: connected");
             } catch (IOException ex) {
-                //dialog to show that there is connection error
-                System.out.println("client: connection error");
+                System.out.println("ListViewLayout: can't connect");
             }
         }
         if (ClientSocket.getInstance().isConnected()) {
-            ClientSocket.getInstance().say("get-players", (msg) -> {//get-players-success:ahmed
-                System.out.println(msg);
-                System.out.println(msg.substring(0, 4));
-                if (msg.substring(0, 4).trim().equals("user")) {
-                    msg = msg.replace(msg.split(":")[0] + ":", "");
-                    System.out.println("bey:  " + msg);
-                }
-                System.out.println("tessssst:  " + msg);
+
+            //i gonna delete it/////////////////////////////////////////////////
+            th = new Thread(() -> {
+                ClientSocket.getInstance().say("get-players", (msg) -> {
+                    System.out.println("ListViewLayout: general listening -> " + msg);
+                    String[] split = msg.split(":");
+                    if (split[0].trim().equals("get-players-success")) {
+                        System.out.println("ListViewLayout: " + msg);
+                        Platform.runLater(new Runnable() {
+                            @Override
+                            public void run() {
+                                playerList.clear();
+                                for (int i = 1; i < split.length; i++) {
+                                    if (!split[i].trim().equals(ClientSocket.getUsername())) {
+                                        playerList.add(new Player(split[i], 50, "online"));
+                                    }
+                                }
+                            }
+                        });
+                    } else if (split[0].equals("get-players-fail")) {
+                        System.out.println("ListViewLayout: no players found");
+                    } else if (split[0].trim().equals("invite")) {
+                        System.out.println("ListViewLayout: invitation");
+                        showDialog(split[1].trim());
+
+                    }
+                });
+            });
+            th.start();
+            //i gonna delete it/////////////////////////////////////////////////
+
+            /*ClientSocket.getInstance().say("get-players", (msg) -> {//get-players-success:ahmed
+                //System.out.println("ListViewLayout: general listening -> "+msg);
                 String[] split = msg.split(":");
                 if (split[0].trim().equals("get-players-success")) {
-                    System.out.println("tessssst 1");
-
+                    System.out.println("ListViewLayout: " + msg);
                     Platform.runLater(new Runnable() {
                         @Override
                         public void run() {
                             playerList.clear();
                             for (int i = 1; i < split.length; i++) {
-
                                 playerList.add(new Player(split[i], 50, "online"));
-                                System.out.println("tessssst list : " + playerList.size());
                             }
                         }
                     });
-
                 } else if (split[0].equals("get-players-fail")) {
-                    System.out.println("no players found");
+                    System.out.println("ListViewLayout: no players found");
                 }
-
-            });
+            });*/
         }
-
-        //the list online clients from DB of server
-        /*ObservableList<Player> playerList = FXCollections.observableArrayList();
-        playerList.add(new Player("ahmed", 50, "online"));
-        playerList.add(new Player("aly", 65, "online"));
-        playerList.add(new Player("mohammed", 64, "offline"));
-        playerList.add(new Player("hany", 48, "in game"));
-        playerList.add(new Player("samty", 12, "in game"));
-        playerList.add(new Player("ahmed", 50, "online"));
-        playerList.add(new Player("aly", 65, "online"));
-        playerList.add(new Player("mohammed", 64, "offline"));
-        playerList.add(new Player("hany", 48, "in game"));
-        playerList.add(new Player("samty", 12, "in game"));
-        playerList.add(new Player("ahmed", 50, "online"));
-        playerList.add(new Player("aly", 65, "online"));
-        playerList.add(new Player("mohammed", 64, "offline"));
-        playerList.add(new Player("hany", 48, "in game"));
-        playerList.add(new Player("samty", 12, "in game"));
-        playerList.add(new Player("ahmed", 50, "online"));
-        playerList.add(new Player("aly", 65, "online"));
-        playerList.add(new Player("mohammed", 64, "offline"));
-        playerList.add(new Player("hany", 48, "in game"));
-        playerList.add(new Player("samty", 12, "in game"));*/
-        //listView = new ListView<>(playerList);
         listView.setFocusTraversable(false);
         listView.setCellFactory(new PlayerCellFactory(onNav));
         listView.setDisable(false);
@@ -103,79 +113,99 @@ public class ListViewLayout extends BorderPane {
         listView.setPrefHeight(200.0);
         listView.setPrefWidth(200.0);
         setCenter(listView);
-
         backButton = new Button();
         logoutButton = new Button();
-
         Image img = new Image("tictactoeclientapplication/res/iconback.png");
         ImageView view = new ImageView(img);
         backButton.setGraphic(view);
-        backButton.setOnAction(e -> onNav.onNavClick("home"));
+        backButton.setOnAction(e -> {
+            //th.stop();
+            onNav.onNavClick("home",null);
+        });
         backButton.getStyleClass().addAll("RoundButton");
         backButton.setPrefSize(30, 30);
-
         Image img1 = new Image("tictactoeclientapplication/res/iconlogout.png");
         ImageView view1 = new ImageView(img1);
         logoutButton.setGraphic(view1);
         logoutButton.setOnAction(e -> {
-            //playerList.add(new Player("test", 50, "online"));
+
             FileInputStream ear = null;
             FileOutputStream mouth = null;
             try {
                 File file = new File("auth.txt");
-
-                ear = new FileInputStream(file);
-                byte[] b = new byte[ear.available()];
-                ear.read(b);
-                //String authed = new String(b);
-                String req = new String(b).replace("logedin", "logout");//logout:ahmed
-                System.out.println(req);
-                ClientSocket.getInstance().say(req, (msg) -> {
-                });
-
-                //start loading
+                ClientSocket.getInstance().say("logout");
                 mouth = new FileOutputStream(file);
-                String auth = "logedout";
-                mouth.write(auth.getBytes());
-                onNav.onNavClick("login");
-                //dismiss loading
+                mouth.write(new String("logedout").getBytes());
+                onNav.onNavClick("login",null);
             } catch (FileNotFoundException ex) {
-                //dismiss loading
+                System.out.println("ListViewLayout: file not found");
                 Logger.getLogger(LoginLayout.class.getName()).log(Level.SEVERE, null, ex);
             } catch (IOException ex) {
-                //dismiss loading
-                Logger.getLogger(LoginLayout.class.getName()).log(Level.SEVERE, null, ex);
+                System.out.println("ListViewLayout: IOException");
             } finally {
                 try {
+                    //th.stop();
                     mouth.close();
                 } catch (IOException ex) {
-                    Logger.getLogger(LoginLayout.class.getName()).log(Level.SEVERE, null, ex);
+                    System.out.println("ListViewLayout: IOException");
                 }
             }
-            //onNav.onNavClick("login");
-
-        }
-        );
+        });
         logoutButton.getStyleClass().addAll("RoundButton");
         logoutButton.setPrefSize(30, 30);
-
         setMaxHeight(USE_PREF_SIZE);
         setMaxWidth(USE_PREF_SIZE);
         setMinHeight(USE_PREF_SIZE);
         setMinWidth(USE_PREF_SIZE);
         setPrefHeight(400.0);
         setPrefWidth(600.0);
-
         HBox hBox = new HBox();
         AnchorPane left = new AnchorPane();
         HBox.setHgrow(left, Priority.ALWAYS);
         AnchorPane right = new AnchorPane();
         hBox.getChildren().addAll(left, right);
-
         left.getChildren().add(backButton);
         right.getChildren().add(logoutButton);
-
         setTop(hBox);
+    }
 
+    public static void updateList(String msg) {
+        String[] split = msg.split(":");
+        if (split[0].trim().equals("get-players-success")) {
+            System.out.println("ListViewLayout(updateList): " + msg);
+            Platform.runLater(new Runnable() {
+                @Override
+                public void run() {
+                    playerList.clear();
+                    for (int i = 1; i < split.length; i++) {
+                        if (!split[i].trim().equals(ClientSocket.getUsername())) {
+                            playerList.add(new Player(split[i], 50, "online"));
+                        }
+                    }
+                }
+            });
+        } else if (split[0].equals("get-players-fail")) {
+            System.out.println("ListViewLayout: no players found");
+        }
+    }
+    
+    void showDialog(String name) {
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                new Dialog().displayTextDialog(new DialogClicks() {
+                    @Override
+                    public void onGreenBtnCkick() {
+                        System.out.println("accept");
+                    }
+
+                    @Override
+                    public void onRedBtnCkick() {
+                        System.out.println("decline");
+                    }
+
+                }, name + " is inviting you.", "accept", "decline");
+            }
+        });
     }
 }

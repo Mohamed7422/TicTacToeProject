@@ -28,11 +28,13 @@ CREATE TABLE Player (
 -- Create the Game table
 CREATE TABLE Game (
     Id INT GENERATED ALWAYS AS IDENTITY,
-    PlayerId INT NOT NULL,
+    PlayerName VARCHAR(50) NOT NULL,
+    OpponentName VARCHAR(50) NOT NULL,
     DateTime DATE NOT NULL,
     GameResult VARCHAR(50) NOT NULL,
     IsRecorded BOOLEAN DEFAULT false,
     CONSTRAINT gamePK PRIMARY KEY (Id),
-    CONSTRAINT playerIdFK FOREIGN KEY (PlayerId) REFERENCES Player(PlayerId)
+    CONSTRAINT playerNameFK FOREIGN KEY (PlayerName) REFERENCES Player(UserName),
+    CONSTRAINT OpponentNameFK FOREIGN KEY (OpponentName) REFERENCES Player(UserName),
 );
 
