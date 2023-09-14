@@ -8,7 +8,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
-import tictactoeclientapplication.utils.MediumLevel;
+import tictactoeclientapplication.network.ClientSocket;
 import tictactoeclientapplication.utils.OnNavigation;
 
 public class LevelsLayout extends BorderPane {
@@ -55,16 +55,9 @@ public class LevelsLayout extends BorderPane {
         backButton.setPrefSize(30, 30);
 
         btnEasy.setOnAction(e -> onNav.onNavClick("board"));
-        btnMed.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-            	MediumLevel ml = new MediumLevel();
-                try {
-                    onNav.onNavClick("board");
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
+
+        btnMed.setOnAction(e -> {
+            ClientSocket.getInstance().say("test:test", (msg)->{});
         });
         btnHard.setOnAction(e -> onNav.onNavClick("board"));
         backButton.setOnAction(e -> onNav.onNavClick("home"));
