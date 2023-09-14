@@ -105,7 +105,6 @@ public class DataBaseAccessLayer {
                 ps.close();
                 return false;
             }
-            //System.out.println("Result set : "+resultSet.getString("USERNAME"));
 
         } catch (SQLException ex) {
             System.out.println("Not Found!!");
@@ -116,8 +115,6 @@ public class DataBaseAccessLayer {
         }
 
     }
-
-    //get all online players
     public List<Player> getOnlinePlayers() {
         List<Player> onlinePlayers = new ArrayList<>();
         try {
@@ -133,7 +130,6 @@ public class DataBaseAccessLayer {
                 onlinePlayers.add(player);
 
             }
-            System.out.println("get players from dao:" + onlinePlayers.size());
             rs.close();
             ps.close();
 
@@ -145,34 +141,6 @@ public class DataBaseAccessLayer {
 
     }
 
-    //return a specific player by his username
-    /* public Player getPlayerByUserName(String username) {
-        Player player = null;
-        String query = "SELECT * FROM PLAYER WHERE USERNAME = ?";
-
-        try {
-            PreparedStatement ps = connection.prepareStatement(query);
-            ps.setString(1, username);
-            ResultSet rs = ps.executeQuery();
-
-            if (rs.next()) {
-                String name = rs.getString("USERNAME");
-                String password = rs.getString("PASSWORD");
-                int score = rs.getInt("SCORE");
-                String status = rs.getString("STATUS");
-
-                player = new Player(name, password, score, status);
-            }
-
-            rs.close();
-            ps.close();
-        } catch (SQLException ex) {
-            Logger.getLogger(DataBaseAccessLayer.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-        return player;
-    } */
-    //Update player status
     public boolean updatePlayerStatus(String username, String newStatus) {
         try {
             String query = "UPDATE PLAYER SET STATUS = ? WHERE USERNAME = ?";
@@ -185,6 +153,42 @@ public class DataBaseAccessLayer {
         } catch (SQLException ex) {
             Logger.getLogger(DataBaseAccessLayer.class.getName()).log(Level.SEVERE, null, ex);
             return false;
+        }
+    }
+
+    public int getToken(String username) {
+        try {
+            String query = "SELECT TOKEN FROM PLAYER WHERE USERNAME = ?";
+            PreparedStatement ps = connection.prepareStatement(query);
+            ps.setString(1, username);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getInt("TOKEN");
+            } else {
+                return -1;
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(DataBaseAccessLayer.class.getName()).log(Level.SEVERE, null, ex);
+            return -1;
+
+        }
+    }
+    
+    public String getUsername(int token) {
+        try {
+            String query = "SELECT USERNAME FROM PLAYER WHERE TOKEN = ?";
+            PreparedStatement ps = connection.prepareStatement(query);
+            ps.setInt(1, token);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getString("USERNAME");
+            } else {
+                return null;
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(DataBaseAccessLayer.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
+
         }
     }
 

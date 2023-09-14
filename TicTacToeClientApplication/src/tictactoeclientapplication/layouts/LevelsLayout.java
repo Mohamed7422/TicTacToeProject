@@ -54,13 +54,11 @@ public class LevelsLayout extends BorderPane {
         backButton.getStyleClass().addAll("RoundButton");
         backButton.setPrefSize(30, 30);
 
-        btnEasy.setOnAction(e -> onNav.onNavClick("board"));
-
-        btnMed.setOnAction(e -> {
-            ClientSocket.getInstance().say("test:test", (msg)->{});
-        });
-        btnHard.setOnAction(e -> onNav.onNavClick("board"));
-        backButton.setOnAction(e -> onNav.onNavClick("home"));
+        btnEasy.setOnAction(e -> onNav.onNavClick("easy",null));
+        btnMed.setOnAction(e -> onNav.onNavClick("medium",null));
+        btnHard.setOnAction(e -> onNav.onNavClick("hard",null));
+        
+        backButton.setOnAction(e -> onNav.onNavClick("home",null));
 
         pane.getChildren().addAll(btnEasy, btnMed, btnHard);
 

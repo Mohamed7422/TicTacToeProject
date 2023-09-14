@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 import java.util.logging.Level;
@@ -56,6 +55,7 @@ class ChatHandler {
 
     static int ID_GENERATOR = 1;
     int id;
+    String username;
     DataInputStream ear;
     PrintStream mouth;
     static Vector<ChatHandler> clients = new Vector<ChatHandler>();
@@ -63,10 +63,11 @@ class ChatHandler {
 
     ChatHandler(Socket waiter) {
         try {
-            System.out.println("one user accepted");
             ear = new DataInputStream(waiter.getInputStream());
+            username = ear.readLine();
+            id = ID_GENERATOR++;
+            System.out.println(username + " accepted");
             mouth = new PrintStream(waiter.getOutputStream());
-            this.id = ID_GENERATOR++;
             ChatHandler.clients.add(this);
             th = new Thread(() -> {
                 while (true) {
@@ -78,43 +79,27 @@ class ChatHandler {
                         }
                         System.out.println(msg);
                         String[] split = msg.split(":");
-                        switch (split[0]) {
-                            case "login"://login:m7md:123456
-                                //send to all new list of clients
-                                String name = split[1];
-                                String pass = split[2];
-
+                        switch (split[1]) {
+                            case "login"://no-name:login:m7md:123456
+                                String name = split[2];
+                                String pass = split[3];
                                 if (login(name, pass)) {
-                                    sendToClient(id, split[0] + "-success");//or"-fail"
-                                    //change status here
+                                    sendToClient(this, split[1] + "-success");
                                     changeStatusOfPlayer(name, "Online");
                                     List<Player> list = getOnlinePlayers();
                                     String response = "get-players-success";
                                     for (Player p : list) {
                                         response += ":" + p.getName();
                                     }
-                                    System.out.println(response);
                                     if (list.size() != 0) {
                                         sendToAllClients(response);
-                                    } else {
-                                        sendToAllClients("get-players-fail");
                                     }
                                 } else {
-                                    sendToClient(id, split[0] + "-fail");
+                                    sendToClient(this, split[1] + "-fail");
                                 }
-
                                 break;
-                            case "test":
-                                System.out.println("i'm here to test");
-                                sendToAllClients("test send to all");
-                                break;
-                            case "logout":////logout:ahmed
-                                System.out.println("from server: " +msg);
-                                //change status of user in DB to "offline"
-                                //send to all new list of clients
-                                //getOnlinePlayers(1,"Online");
-                                
-                                changeStatusOfPlayer(split[1], "Offline");
+                            case "logout"://mohannad:logout
+                                changeStatusOfPlayer(split[0], "Offline");
                                 List<Player> list = getOnlinePlayers();
                                 String response = "get-players-success";
                                 for (Player p : list) {
@@ -122,45 +107,36 @@ class ChatHandler {
                                 }
                                 System.out.println(response);
                                 if (list.size() != 0) {
-                                    System.out.println("hello:  "+response);
+                                    System.out.println("hello:  " + response);
                                     sendToAllClients(response);
                                 } else {
                                     sendToAllClients("get-players-fail");
                                 }
-
                                 break;
-                            case "signup":
-                                //signUp()
-                                if (signUp(split[1], split[2])) {
-                                    sendToClient(id, split[0] + "-success");//or"-fail"
-
+                            case "signup"://no-name:signup:m7md:123456 //no-name:signup:hanaa:123456
+                                if (signUp(split[2], split[3])) {
+                                    sendToClient(this, split[1] + "-success");//or"-fail"
                                 } else {
-                                    sendToClient(id, split[0] + "-fail");
+                                    sendToClient(this, split[1] + "-fail");
                                 }
-
                                 break;
-                            case "get-players":
-                                //getOnlinePlayers("hanaa", "Offline");//change hanaa's status to offline
+                            case "get-players"://mohannad:get-players
                                 List<Player> list1 = getOnlinePlayers();
-                                String response1 = split[0] + "-success";
+                                String response1 = split[1] + "-success";
                                 for (Player p : list1) {
                                     response1 += ":" + p.getName();
                                 }
-                                System.out.println(response1);
                                 if (list1.size() != 0) {
-                                    sendToClient(id, response1);
+                                    sendToClient(this, response1);
                                 } else {
-                                    sendToClient(id, split[0] + "-fail");
+                                    sendToClient(this, split[1] + "-fail");
                                 }
-
                                 break;
-                            case "invite":
-                                //invitation()
-                                sendToClient(id, split[0] + "-success");//or"-fail"
-                                break;
-                            case "challenge"://callenge:username
-                                //challenge()
-
+                            case "challenge"://mohammed:challenge:mohannad
+                                sendToClient(split[2], "invite:" + split[0]);
+                                break;//order:username:data  
+                            case "accept-challenge"://mohannad:accept-challenge:mohammed
+                                sendToClient(split[2], "accepted-invite:" + split[0]);
                                 break;
                         }
 
@@ -185,17 +161,47 @@ class ChatHandler {
 
     }
 
-    void sendToClient(int id, String msg) {
+    void test() {
         for (ChatHandler client : clients) {
-            if (client.id == id) {
+            System.out.println("lol: " + client.username);
+        }
+    }
+
+    void sendToClient(String username, String msg) {
+        System.out.println("username: " + username);
+        System.out.println("msg: " + msg);
+
+        for (ChatHandler client : clients) {
+            System.out.println("send to: " + client.username);
+            if (client.username.trim().equals(username.trim())) {
+                System.out.println("sent");
                 client.mouth.println(msg);
+                client.mouth.flush();
             }
         }
     }
 
-    void sendToAllClients(String msg) {
+    void sendToClient(int id, String msg) {
+
         for (ChatHandler client : clients) {
-            client.mouth.println("user" + this.id + ": " + msg);
+            if (client.id == id) {
+                client.mouth.println(msg);
+                client.mouth.flush();
+            }
+        }
+    }
+
+    void sendToClient(ChatHandler client, String msg) {
+        client.mouth.println(msg);
+        client.mouth.flush();
+    }
+
+    void sendToAllClients(String msg) {
+        System.out.println("num of clients on server: " + clients.size());
+        for (ChatHandler client : clients) {
+            System.out.println(client.username);
+            client.mouth.println(msg);
+            client.mouth.flush();
         }
     }
 
@@ -205,6 +211,7 @@ class ChatHandler {
             mouth.flush();
             mouth.close();
             th.stop();
+            clients.remove(this);
         } catch (IOException ex) {
             Logger.getLogger(ChatHandler.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -226,6 +233,19 @@ class ChatHandler {
 
     private boolean changeStatusOfPlayer(String username, String Status) {
         return new DataBaseAccessLayer().updatePlayerStatus(username, Status);
+    }
+
+
+    private int getPlayerToken(String username) {
+        return new DataBaseAccessLayer().getToken(username);
+    }
+
+    private String getPlayerNameByToken(int token) {
+        return new DataBaseAccessLayer().getUsername(token);
+    }
+
+    private void sendChallenge(String username) {
+
     }
 
 }

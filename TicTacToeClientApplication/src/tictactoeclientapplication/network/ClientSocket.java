@@ -1,26 +1,21 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package tictactoeclientapplication.network;
 
 import java.io.DataInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.net.Socket;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import tictactoeclientapplication.utils.OnResponse;
-import tictactoeclientapplication.utils.ProgressIndicatorClass;
 
 public class ClientSocket {
 
     private static ClientSocket instance;
 
     private static Socket sc;
-    private static DataInputStream ear;
-    private static PrintStream mouth;
+    public DataInputStream ear;
+    private PrintStream mouth;
     private static Thread thread;
     private OnResponse onResponse;
 
@@ -28,11 +23,11 @@ public class ClientSocket {
     }
 
     public static ClientSocket getInstance() {
-        if (ClientSocket.instance == null) {
-            ClientSocket.instance = new ClientSocket();
+        if (instance == null) {
+            System.out.println("ClientSocket: new instance");
+            instance = new ClientSocket();
         }
-
-        return ClientSocket.instance;
+        return instance;
     }
 
     public void openConnection() throws IOException {
@@ -43,19 +38,19 @@ public class ClientSocket {
             //sc = new Socket("156.196.113.64", 5000);
             ear = new DataInputStream(sc.getInputStream());
             mouth = new PrintStream(sc.getOutputStream());
-            System.out.println("client: connected");
-            //ProgressIndicatorClass.dismiss();
-            
+            mouth.println(getUsername());
+            System.out.println("ClientSocket: connected");
             startListen();
         } catch (IOException ex) {
-            //ProgressIndicatorClass.dismiss();
+            System.out.println("ClientSocket: can't connect");
             throw ex;
         }
     }
 
-    private void startListen(){
-        thread = new Thread(()-> {
+    private void startListen() {
+        thread = new Thread(() -> {
             try {
+                System.out.println("ClientSocket: start listening");
                 while (true) {
                     String recievedMsg = ear.readLine();
                     this.onResponse.onResponse(recievedMsg);
@@ -64,19 +59,25 @@ public class ClientSocket {
                     }
                 }
             } catch (IOException ex) {
-                System.out.println("listening error");
+                System.out.println("ClientSocket:  can't listening");
                 //throw ex;
-            }finally{
+            } finally {
                 closeEveryThing();
-                System.out.println("connection closed");
+                System.out.println("ClientSocket: final listening");
             }
         });
         thread.start();
     }
 
     public void say(String msg, OnResponse onResponse) {
-        mouth.println(msg);//login:moha:1235
+        System.out.println("ClientSocket: say " + getUsername() + ":" + msg);
+        mouth.println(getUsername() + ":" + msg);
         this.onResponse = onResponse;
+    }
+
+    public void say(String msg) {
+        System.out.println("ClientSocket: say without waiting response");
+        mouth.println(getUsername() + ":" + msg);
     }
 
     public boolean isConnected() {
@@ -92,8 +93,34 @@ public class ClientSocket {
             mouth.flush();
             mouth.close();
             thread.stop();
+            System.out.println("ClientSocket: close everything");
         } catch (IOException ex) {
-            Logger.getLogger(ClientSocket.class.getName()).log(Level.SEVERE, null, ex);
+            System.out.println("ClientSocket: can't close everything");
+        }
+    }
+
+    public static String getUsername() {
+        String authed = "no-name";
+        File f = new File("auth.txt");
+        FileInputStream ear = null;
+        try {
+            ear = new FileInputStream(f);
+            byte[] b = new byte[ear.available()];
+            ear.read(b);
+            if (new String(b).split(":")[0].equals("logedin")) {
+                authed = new String(b).split(":")[1].trim();
+            }
+        } catch (FileNotFoundException ex) {
+            System.out.println("FileNotFoundException");
+        } catch (IOException ex) {
+            System.out.println("IOException");
+        } finally {
+            try {
+                ear.close();
+            } catch (IOException ex) {
+                System.out.println("IOException");
+            }
+            return authed;
         }
     }
 

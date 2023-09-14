@@ -1,13 +1,11 @@
 package tictactoeclientapplication.layouts;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
@@ -18,12 +16,9 @@ import static javafx.scene.layout.Region.USE_PREF_SIZE;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import tictactoeclientapplication.network.ClientSocket;
-import tictactoeclientapplication.utils.Dialog;
-import tictactoeclientapplication.utils.DialogClicks;
 import tictactoeclientapplication.utils.OnNavigation;
-import tictactoeclientapplication.utils.ProgressIndicatorClass;
 
-public class LoginLayout extends BorderPane implements DialogClicks {
+public class LoginLayout extends BorderPane {
 
     protected final VBox vBox;
     protected final VBox vBox0;
@@ -46,7 +41,6 @@ public class LoginLayout extends BorderPane implements DialogClicks {
     OnNavigation onNav;
 
     public LoginLayout(OnNavigation onNav) {
-
         getStyleClass().add("Pane");
         this.onNav = onNav;
         vBox = new VBox();
@@ -66,102 +60,76 @@ public class LoginLayout extends BorderPane implements DialogClicks {
         textOr = new Text();
         textGuest = new Text();
         btnSignIn = new Button("Login");
-
-        //Background background1 = new Background(new BackgroundFill(Color.valueOf("#A94064"), new CornerRadii(10), new Insets(10)));
         btnSignIn.setPrefHeight(50.0);
         btnSignIn.setPrefWidth(200.0);
         btnSignIn.getStyleClass().add("PinkButton");
         btnSignIn.setOnAction((e) -> {
-            //ProgressIndicatorClass.show();
             String userName = textFieldUsername.getText().trim();
             String pass = textFieldPassword.getText().trim();
-           
             if (!ClientSocket.getInstance().isConnected()) {
-                //ProgressIndicatorClass.show();
-                
                 try {
                     ClientSocket.getInstance().openConnection();
-                    //ProgressIndicatorClass.dismiss();
+                    System.out.println("LoginLayout: connected");
                 } catch (IOException ex) {
-                    //dialog to show that there is connection error
-                    //ProgressIndicatorClass.dismiss();
-                    //new Dialog().displayTextDialog(this, "connection error");
-                    System.out.println("client: connection error");
-
+                    System.out.println("LoginLayout: can't connect");
                 }
             }
             if (ClientSocket.getInstance().isConnected()) {
                 ClientSocket.getInstance().say("login:" + userName + ":" + pass, (msg) -> {
-                    //HanaaprogIndicator.showProgressDialog(true);
                     if (msg.trim().equals("login-success")) {
+                        System.out.println("LoginLayout: "+msg);
                         FileOutputStream mouth = null;
                         try {
                             File file = new File("auth.txt");
                             mouth = new FileOutputStream(file);
-                            String auth = "logedin:"+userName;
+                            String auth = "logedin:" + userName;
                             mouth.write(auth.getBytes());
-                            //progIndicator.showProgressDialog(false);
-                            onNav.onNavClick("home");
-
+                            onNav.onNavClick("home",null);
                         } catch (FileNotFoundException ex) {
-                            Logger.getLogger(LoginLayout.class.getName()).log(Level.SEVERE, null, ex);
+                            System.out.println("LoginLayout: file not found");
                         } catch (IOException ex) {
-                            Logger.getLogger(LoginLayout.class.getName()).log(Level.SEVERE, null, ex);
+                            System.out.println("LoginLayout: IOException");
                         } finally {
                             try {
                                 mouth.close();
                             } catch (IOException ex) {
-                                Logger.getLogger(LoginLayout.class.getName()).log(Level.SEVERE, null, ex);
+                                System.out.println("LoginLayout: IOException");
                             }
                         }
-
                     } else if (msg.trim().equals("login-fail")) {
-                        ////dialog to show that the user is unauthenticated
-                        new Dialog().displayTextDialog(this, " unauthenticated");
-                        System.out.println("client: unauthenticated");
+                        System.out.println("LoginLayout: unauthenticated");
                     }
                 });
             }
         });
 
         btnSignIn.setPrefWidth(250);
-
         setMaxHeight(USE_PREF_SIZE);
         setMaxWidth(USE_PREF_SIZE);
         setMinHeight(USE_PREF_SIZE);
         setMinWidth(USE_PREF_SIZE);
-
         BorderPane.setAlignment(vBox, javafx.geometry.Pos.CENTER);
         vBox.setAlignment(javafx.geometry.Pos.CENTER);
-
         hBox.setAlignment(javafx.geometry.Pos.CENTER);
-
         textUsername.getStyleClass().add("PinkText");
         textUsername.setText("Username");
         textUsername.setWrappingWidth(150);
-
         VBox.setMargin(hBox, new Insets(0.0));
         hBox.setPadding(new Insets(16.0, 0.0, 8.0, 0.0));
-
         hBox0.setAlignment(javafx.geometry.Pos.CENTER);
         hBox0.setPrefHeight(0.0);
         hBox0.setPrefWidth(600.0);
-
         textPassword.getStyleClass().add("PinkText");
         textPassword.setText("Password");
         textPassword.setWrappingWidth(150);
-
         VBox.setMargin(hBox0, new Insets(0.0));
         hBox0.setPadding(new Insets(8.0, 0.0, 8.0, 0.0));
-
         hBox1.setAlignment(javafx.geometry.Pos.CENTER);
         hBox1.setPrefHeight(0.0);
         hBox1.setPrefWidth(600.0);
-
         VBox.setMargin(hBox1, new Insets(0.0));
         hBox1.setPadding(new Insets(8.0, 0.0, 16.0, 0.0));
         setCenter(vBox);
-
         BorderPane.setAlignment(textTitle, javafx.geometry.Pos.CENTER);
         textTitle.setStrokeType(javafx.scene.shape.StrokeType.OUTSIDE);
         textTitle.setStrokeWidth(0.0);
@@ -170,9 +138,7 @@ public class LoginLayout extends BorderPane implements DialogClicks {
         textTitle.setTextAlignment(javafx.scene.text.TextAlignment.CENTER);
         BorderPane.setMargin(textTitle, new Insets(100.0, 0.0, 25.0, 0.0));
         setTop(textTitle);
-
         BorderPane.setAlignment(vBox0, javafx.geometry.Pos.CENTER);
-
         hBox2.setAlignment(javafx.geometry.Pos.CENTER);
         hBox2.setSpacing(10.0);
         textHaveNot.setStrokeType(javafx.scene.shape.StrokeType.OUTSIDE);
@@ -183,7 +149,6 @@ public class LoginLayout extends BorderPane implements DialogClicks {
         textSignUp.setText("sign up");
         textSignUp.getStyleClass().add("EditableText");
         hBox2.setPadding(new Insets(25.0, 0.0, 0.0, 0.0));
-
         hBox3.setAlignment(javafx.geometry.Pos.CENTER);
         hBox3.setSpacing(10.0);
         textOr.setStrokeType(javafx.scene.shape.StrokeType.OUTSIDE);
@@ -194,9 +159,7 @@ public class LoginLayout extends BorderPane implements DialogClicks {
         textGuest.setText("as a Guest");
         textGuest.getStyleClass().add("EditableText");
         hBox3.setPadding(new Insets(0.0, 0.0, 25.0, 0.0));
-
         setBottom(vBox0);
-
         textSignUp.setOnMouseEntered(e -> {
             textSignUp.setStyle("-fx-fill: #FFED00;");
         });
@@ -204,7 +167,7 @@ public class LoginLayout extends BorderPane implements DialogClicks {
             textSignUp.setStyle("-fx-fill: #D36779;");
         });
         textSignUp.setOnMouseClicked(e -> {
-            onNav.onNavClick("sign up");
+            onNav.onNavClick("sign up",null);
         });
 
         textGuest.setOnMouseEntered(e -> {
@@ -214,14 +177,12 @@ public class LoginLayout extends BorderPane implements DialogClicks {
             textGuest.setStyle("-fx-fill: #D36779;");
         });
         textGuest.setOnMouseClicked(e -> {
-            onNav.onNavClick("home");
+            onNav.onNavClick("home",null);
         });
-
         textFieldUsername.setPrefWidth(200);
         textFieldPassword.setPrefWidth(200);
         textFieldUsername.getStyleClass().add("TextField");
         textFieldPassword.getStyleClass().add("TextField");
-
         hBox.getChildren().add(textUsername);
         hBox.getChildren().add(textFieldUsername);
         vBox.getChildren().add(hBox);
@@ -233,20 +194,7 @@ public class LoginLayout extends BorderPane implements DialogClicks {
         hBox2.getChildren().add(textSignUp);
         hBox3.getChildren().add(textOr);
         hBox3.getChildren().add(textGuest);
-
         vBox.getChildren().add(btnSignIn);
-
         vBox0.getChildren().addAll(hBox2, hBox3);
-
-    }
-
-    @Override
-    public void onGreenBtnCkick() {
-        onNav.onNavClick("login");
-    }
-
-    @Override
-    public void onRedBtnCkick() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }
