@@ -11,7 +11,9 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -191,7 +193,99 @@ public class DataBaseAccessLayer {
 
         }
     }
+    
+    //getCountOfOfflinePlayers
+    public List<Player> getOfflinePlayers(){
+       List<Player> offlinePlayers = new ArrayList<>();
+        try {
+            String query = "SELECT * FROM PLAYER WHERE STATUS = 'Offline'";
+            PreparedStatement ps = connection.prepareStatement(query);
+            ResultSet rs = ps.executeQuery();
 
+            while (rs.next()) {
+                Player player = new Player(rs.getString("USERNAME"),
+                        rs.getString("PASSWORD"),
+                        rs.getInt("SCORE"),
+                        rs.getString("STATUS"));
+                offlinePlayers.add(player);
+
+            }
+            System.out.println("get players from dao:" + offlinePlayers.size());
+            rs.close();
+            ps.close();
+
+        } catch (SQLException ex) {
+            Logger.getLogger(DataBaseAccessLayer.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return offlinePlayers;
+    
+    }
+    
+
+ //getCountOfInGamePlayers
+    
+    public List<Player> getIngamePlayers(){
+       List<Player> inGamePlayers = new ArrayList<>();
+        try {
+            String query = "SELECT * FROM PLAYER WHERE STATUS = 'Ingame'";
+            PreparedStatement ps = connection.prepareStatement(query);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                Player player = new Player(rs.getString("USERNAME"),
+                        rs.getString("PASSWORD"),
+                        rs.getInt("SCORE"),
+                        rs.getString("STATUS"));
+                inGamePlayers.add(player);
+
+            }
+            System.out.println("get players from dao:" + inGamePlayers.size());
+            rs.close();
+            ps.close();
+
+        } catch (SQLException ex) {
+            Logger.getLogger(DataBaseAccessLayer.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return inGamePlayers;
+    
+    }
+    
+    //Step1:retrive list of Games
+    public  List<Game> getGamesList(){
+       
+        List<Game> games = new ArrayList<>();
+        
+        try {
+            String query = "SELECT * FROM GAME";
+            PreparedStatement ps = connection.prepareStatement(query);
+           ResultSet rs =  ps.executeQuery();
+           
+           while(rs.next()){
+             int gameId =   rs.getInt("ID");
+          String playerName = rs.getString("PlayerName");
+                String opponentName = rs.getString("OpponentName");
+                Date dateTime = rs.getDate("DateTime");
+                String gameResult = rs.getString("GameResult");
+                boolean isRecorded = rs.getBoolean("IsRecorded");
+           
+           Game game = new Game(gameId, playerName, opponentName, dateTime, gameResult, isRecorded);
+           games.add(game);
+           }
+           
+           rs.close();
+           ps.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+      
+        return games;
+    }
+
+    
+    
+    
     public void close() {
         // Close the database connection
         try {
