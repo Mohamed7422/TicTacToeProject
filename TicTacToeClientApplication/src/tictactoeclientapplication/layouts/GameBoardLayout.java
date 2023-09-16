@@ -239,6 +239,9 @@ public class GameBoardLayout extends BorderPane implements DialogClicks {
                     System.out.println("GameBoardLayout: connected");
                 } catch (IOException ex) {
                     System.out.println("GameBoardLayout: can't connect");
+                    new Dialog().displayOneBtnDialog(this, "can't connect", "OK");
+                       
+
                 }
             }
             if (ClientSocket.getInstance().isConnected()) {
@@ -303,6 +306,7 @@ public class GameBoardLayout extends BorderPane implements DialogClicks {
                                 System.out.println("GameBoardLayout: connected");
                             } catch (IOException ex) {
                                 System.out.println("GameBoardLayout: can't connect");
+                                new Dialog().displayOneBtnDialog(this, "can't connect", "OK");
                             }
                         }
                         if (ClientSocket.getInstance().isConnected()) {
