@@ -10,10 +10,13 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import tictactoeclientapplication.network.ClientSocket;
+import tictactoeclientapplication.utils.Dialog;
+import tictactoeclientapplication.utils.DialogClicks;
 import tictactoeclientapplication.utils.OnNavigation;
 
-public class SignUpLayout extends BorderPane {
 
+public class SignUpLayout extends BorderPane implements DialogClicks{
+OnNavigation onNav;
     protected final VBox vBox;
     protected final HBox hBox;
     protected final Text textUsername;
@@ -29,6 +32,7 @@ public class SignUpLayout extends BorderPane {
     protected final Text textAlready;
     protected final Text textLogin;
     protected final Button btnSignUp;
+    Dialog dialog = new Dialog();
 
     public SignUpLayout(OnNavigation onNav) {
         getStyleClass().add("Pane");
@@ -55,11 +59,22 @@ public class SignUpLayout extends BorderPane {
             String pass = textFieldPassword.getText().trim();
             String passConfirm = textFieldConfirm.getText().trim();
             if (name.isEmpty() || pass.isEmpty() || passConfirm.isEmpty()) {
+                //create dialog one button
+                dialog.displayOneBtnDialog( 
+                        this, "Enter All Required Fields", "OK");
+                
+            }else{
+            if (name.isEmpty() || pass.isEmpty() || passConfirm.isEmpty()) {
                 System.out.println("SignUpLayout: empty fields is required");
+                dialog.displayOneBtnDialog(this, "empty fields is required", "OK");
+
             } else if (textFieldPassword.getText().length() < 6) {
                 System.out.println("SignUpLayout: your password less than 6 character");
+                dialog.displayOneBtnDialog(this, "your password less than 6 character", "OK");
+
             } else if (!textFieldPassword.getText().equals(textFieldConfirm.getText())) {
                 System.out.println("SignUpLayout: please check your password");
+                 dialog.displayOneBtnDialog(this, "please check your password", "OK");
             } else {
                 if (!ClientSocket.getInstance().isConnected()) {
                     try {
@@ -67,6 +82,8 @@ public class SignUpLayout extends BorderPane {
                         System.out.println("SignUpLayout: connected");
                     } catch (IOException ex) {
                         System.out.println("SignUpLayout: can't connect");
+                       dialog.displayOneBtnDialog(this, "Check Internet Connection", "OK");
+
                     }
                 }
                 if (ClientSocket.getInstance().isConnected()) {
@@ -77,9 +94,12 @@ public class SignUpLayout extends BorderPane {
                             onNav.onNavClick("login",null);
                         } else if (msg.equals("signup-fail")) {
                             System.out.println("SignUpLayout: can't create an account");
+                            dialog.displayOneBtnDialog(this, "can't create an account", "OK");
+
                         }
                     });
                 }
+            }
             }
         });
         btnSignUp.setPrefWidth(250);
@@ -158,4 +178,13 @@ public class SignUpLayout extends BorderPane {
         hBox2.getChildren().add(textLogin);
         vBox.getChildren().add(btnSignUp);
     }
+
+    @Override
+    public void onGreenBtnCkick() {
+     }
+
+    @Override
+    public void onRedBtnCkick() {
+        onNav.onNavClick("signup", null);
+     }
 }

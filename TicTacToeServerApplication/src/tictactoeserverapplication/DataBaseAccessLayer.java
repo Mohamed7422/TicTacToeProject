@@ -191,6 +191,76 @@ public class DataBaseAccessLayer {
 
         }
     }
+    
+     //getCountOfInGamePlayers
+    public List<Player> getIngamePlayers() {
+        List<Player> inGamePlayers = new ArrayList<>();
+        try {
+            String query = "SELECT * FROM PLAYER WHERE STATUS = 'Ingame'";
+            PreparedStatement ps = connection.prepareStatement(query);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                Player player = new Player(rs.getString("USERNAME"),
+                        rs.getString("PASSWORD"),
+                        rs.getInt("SCORE"),
+                        rs.getString("STATUS"));
+                inGamePlayers.add(player);
+
+            }
+            System.out.println("get players from dao:" + inGamePlayers.size());
+            rs.close();
+            ps.close();
+
+        } catch (SQLException ex) {
+            Logger.getLogger(DataBaseAccessLayer.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return inGamePlayers;
+
+    }
+    
+     public boolean updatePlayerScore(String username, int newScore) {
+        try {
+            String query = "UPDATE PLAYER SET SCORE = ? WHERE USERNAME = ?";
+            PreparedStatement ps = connection.prepareStatement(query);
+            ps.setInt(1, newScore);
+            ps.setString(2, username);
+            ps.executeUpdate();
+            ps.close();
+            return true;
+        } catch (SQLException ex) {
+            Logger.getLogger(DataBaseAccessLayer.class.getName()).log(Level.SEVERE, null, ex);
+            return false;
+        }
+    }
+     //getCountOfOfflinePlayers
+    public List<Player> getOfflinePlayers() {
+        List<Player> offlinePlayers = new ArrayList<>();
+        try {
+            String query = "SELECT * FROM PLAYER WHERE STATUS = 'Offline'";
+            PreparedStatement ps = connection.prepareStatement(query);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                Player player = new Player(rs.getString("USERNAME"),
+                        rs.getString("PASSWORD"),
+                        rs.getInt("SCORE"),
+                        rs.getString("STATUS"));
+                offlinePlayers.add(player);
+
+            }
+            System.out.println("get players from dao:" + offlinePlayers.size());
+            rs.close();
+            ps.close();
+
+        } catch (SQLException ex) {
+            Logger.getLogger(DataBaseAccessLayer.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return offlinePlayers;
+
+    }
 
     public void close() {
         // Close the database connection

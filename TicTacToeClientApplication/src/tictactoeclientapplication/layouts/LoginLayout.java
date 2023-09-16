@@ -16,9 +16,11 @@ import static javafx.scene.layout.Region.USE_PREF_SIZE;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import tictactoeclientapplication.network.ClientSocket;
+import tictactoeclientapplication.utils.Dialog;
+import tictactoeclientapplication.utils.DialogClicks;
 import tictactoeclientapplication.utils.OnNavigation;
 
-public class LoginLayout extends BorderPane {
+public class LoginLayout extends BorderPane implements DialogClicks{
 
     protected final VBox vBox;
     protected final VBox vBox0;
@@ -37,6 +39,7 @@ public class LoginLayout extends BorderPane {
     protected final Text textOr;
     protected final Text textGuest;
     protected final Button btnSignIn;
+    Dialog d  = new Dialog();
 
     OnNavigation onNav;
 
@@ -66,12 +69,17 @@ public class LoginLayout extends BorderPane {
         btnSignIn.setOnAction((e) -> {
             String userName = textFieldUsername.getText().trim();
             String pass = textFieldPassword.getText().trim();
+            if (userName.isEmpty() || pass.isEmpty()) {
+                //create dialog one button
+                d.displayOneBtnDialog(this, "Enter All Required Fields", "OK");
+            }else{
             if (!ClientSocket.getInstance().isConnected()) {
                 try {
                     ClientSocket.getInstance().openConnection();
                     System.out.println("LoginLayout: connected");
                 } catch (IOException ex) {
                     System.out.println("LoginLayout: can't connect");
+                     d.displayOneBtnDialog(this, "Check Internet Connection", "OK");
                 }
             }
             if (ClientSocket.getInstance().isConnected()) {
@@ -87,19 +95,25 @@ public class LoginLayout extends BorderPane {
                             onNav.onNavClick("home",null);
                         } catch (FileNotFoundException ex) {
                             System.out.println("LoginLayout: file not found");
+                            d.displayOneBtnDialog(this, "file not found", "OK");
+                            
                         } catch (IOException ex) {
                             System.out.println("LoginLayout: IOException");
+                             d.displayOneBtnDialog(this, "Check Internet Connection", "OK");
                         } finally {
                             try {
                                 mouth.close();
                             } catch (IOException ex) {
                                 System.out.println("LoginLayout: IOException");
+                                d.displayOneBtnDialog(this, "Check Internet Connection", "OK");
+
                             }
                         }
                     } else if (msg.trim().equals("login-fail")) {
                         System.out.println("LoginLayout: unauthenticated");
                     }
                 });
+            }
             }
         });
 
@@ -196,5 +210,15 @@ public class LoginLayout extends BorderPane {
         hBox3.getChildren().add(textGuest);
         vBox.getChildren().add(btnSignIn);
         vBox0.getChildren().addAll(hBox2, hBox3);
+    }
+
+    @Override
+    public void onGreenBtnCkick() {
+        
+    }
+
+    @Override
+    public void onRedBtnCkick() {
+        onNav.onNavClick("login", null);
     }
 }
