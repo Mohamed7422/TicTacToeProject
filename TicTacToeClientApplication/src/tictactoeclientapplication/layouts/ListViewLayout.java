@@ -59,8 +59,6 @@ public class ListViewLayout extends BorderPane {
             }
         }
         if (ClientSocket.getInstance().isConnected()) {
-
-            //i gonna delete it/////////////////////////////////////////////////
             th = new Thread(() -> {
                 ClientSocket.getInstance().say("get-players", (msg) -> {
                     System.out.println("ListViewLayout: general listening -> " + msg);
