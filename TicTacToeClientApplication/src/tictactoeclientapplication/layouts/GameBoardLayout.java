@@ -230,7 +230,7 @@ public class GameBoardLayout extends BorderPane implements DialogClicks {
 
                 ClientSocket.getInstance().say("leave-game:" + playerName2);
 
-                onNav.onNavClick("online", null);
+                onNav.onNavClick("home", null);
             });
             player1Symbol = gameData.getOpponent().split(":")[1].trim().equals("X") ? "O" : "X";
             player2Symbol = gameData.getOpponent().split(":")[1].trim();
@@ -244,7 +244,6 @@ public class GameBoardLayout extends BorderPane implements DialogClicks {
                 } catch (IOException ex) {
                     System.out.println("GameBoardLayout: can't connect");
                     new Dialog().displayOneBtnDialog(this, "can't connect", "OK");
-                       
 
                 }
             }
@@ -290,30 +289,14 @@ public class GameBoardLayout extends BorderPane implements DialogClicks {
                                         createFileToMoves();
                                         addNewFileName();
                                     }
-                                    displayGameOverMessage();
-                                    String req = "store-game:" + playerName1 + ":" + playerName2 + ":" + player1Symbol + ":" + player2Symbol + ":" + data + ":" + winningSymbol + ":" + recordFlag;
-                                    ClientSocket.getInstance().say("req", (msg) -> {
-                                        String[] split = msg.split(":");
-                                        String winning = split[6];
-                                        String playerName1 = split[1];
-                                        String playerName2 = split[2];
-                                        if (winningSymbol.equals(playerName1)) {
-                                            ClientSocket.getInstance().say("add-point:" + playerName1);
-                                            //updatePlayerScore(playerName1,5);
-                                        } else if (winningSymbol.equals(playerName2)) {
-                                            ClientSocket.getInstance().say("add-point:" + playerName2);
-
-                                            // updatePlayerScore();
-                                        }
-
-                                    });
-
+                                    String req = "store-game:" + playerName1 + ":" + playerName2 + ":" + player1Symbol + ":" + player2Symbol + ":" + date + ":" + winningSymbol + ":" + recordFlag;
+                                    ClientSocket.getInstance().say(req);
                                 }
                             }
                         });
 
                     } else if (split[0].trim().equals("leave")) {
-                        onNav.onNavClick("online", null);
+                        onNav.onNavClick("home", null);
 
                     }
 
@@ -378,24 +361,8 @@ public class GameBoardLayout extends BorderPane implements DialogClicks {
                                         createFileToMoves();
                                         addNewFileName();
                                     }
-                                    displayGameOverMessage();
-                                    String req = "store-game:" + playerName1 + ":" + playerName2 + ":" + player1Symbol + ":" + player2Symbol + ":" + data + ":" + winningSymbol + ":" + recordFlag;
-                                    ClientSocket.getInstance().say("req", (msg) -> {
-                                        String[] split = msg.split(":");
-                                        String winning = split[6];
-                                        String playerName1 = split[1];
-                                        String playerName2 = split[2];
-                                         if (winningSymbol.equals(playerName1)) {
-                                            ClientSocket.getInstance().say("add-point:" + playerName1);
-                                            //updatePlayerScore(playerName1,5);
-                                        } else if (winningSymbol.equals(playerName2)) {
-                                            ClientSocket.getInstance().say("add-point:" + playerName2);
-
-                                            // updatePlayerScore();
-                                        }
-
-                                    });
-
+                                    String req = "store-game:" + playerName1 + ":" + playerName2 + ":" + player1Symbol + ":" + player2Symbol + ":" + date + ":" + winningSymbol + ":" + recordFlag;
+                                    ClientSocket.getInstance().say(req);
                                 }
 
                                 String req = "game-turn:" + gameData.getOpponent().split(":")[0];
@@ -441,6 +408,8 @@ public class GameBoardLayout extends BorderPane implements DialogClicks {
                                                         createFileToMoves();
                                                         addNewFileName();
                                                     }
+                                                    String req = "store-game:" + playerName1 + ":" + playerName2 + ":" + player1Symbol + ":" + player2Symbol + ":" + date + ":" + winningSymbol + ":" + recordFlag;
+                                                    ClientSocket.getInstance().say(req);
 
                                                 }
                                                 if (move.getSymbol().equals("X")) {
@@ -455,7 +424,7 @@ public class GameBoardLayout extends BorderPane implements DialogClicks {
                                         });
 
                                     } else if (mSplit[0].trim().equals("leave")) {
-                                        onNav.onNavClick("online", null);
+                                        onNav.onNavClick("home", null);
                                     }
                                 });
 
@@ -770,20 +739,38 @@ public class GameBoardLayout extends BorderPane implements DialogClicks {
         new Dialog().displayVideoDialog(this, status);
 
     }
-    
+
     private void displayGameOverMessageOne(String status) {
         //String message = "Game Over!";
         //Open Dialog
-        new Dialog().displayVideoDialogOneBtn(new DialogClicks(){
+        new Dialog().displayVideoDialogOneBtn(new DialogClicks() {
             @Override
             public void onGreenBtnCkick() {
-                onNav.onNavClick("online", null);
+                if (!ClientSocket.getInstance().isConnected()) {
+                    try {
+                        ClientSocket.getInstance().openConnection();
+                        System.out.println("GameBoardLayout: connected");
+                    } catch (IOException ex) {
+                        System.out.println("GameBoardLayout: can't connect");
+                        new Dialog().displayOneBtnDialog(this, "can't connect", "OK");
+                    }
+                }
+                if (ClientSocket.getInstance().isConnected()) {
+                    ClientSocket.getInstance().say("change-online",(msg)->{
+                        if(msg.split(":")[0].trim().equals("changed")){
+                            onNav.onNavClick("home", null);
+                        }
+                        
+                    });
+                    
+                }
+                
             }
 
             @Override
             public void onRedBtnCkick() {
             }
-        
+
         }, status);
 
     }

@@ -35,7 +35,7 @@ public class ClientSocket {
         try {
             //sc = new Socket("192.168.1.3", 5000);
 
-            sc = new Socket("10.175.240.234", 5000);
+            //sc = new Socket("10.175.240.234", 5000);
 
             //sc = new Socket("156.196.113.64", 5000);
             sc = new Socket("10.175.240.234", 5000);

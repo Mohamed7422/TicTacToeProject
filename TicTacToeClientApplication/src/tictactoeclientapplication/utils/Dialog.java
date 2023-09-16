@@ -27,8 +27,8 @@ public class Dialog {
     public void displayVideoDialog(DialogClicks onClick, String status) {
         Stage stage = new Stage();
 
-        //stage.initModality(Modality.APPLICATION_MODAL);
-        //stage.initStyle(StageStyle.TRANSPARENT);
+        stage.initModality(Modality.APPLICATION_MODAL);
+        stage.initStyle(StageStyle.TRANSPARENT);
         stage.setResizable(false);
         AnchorPane pane = new AnchorPane();
         File file = null;
@@ -102,8 +102,8 @@ public class Dialog {
     public void displayVideoDialogOneBtn(DialogClicks onClick, String status) {
         Stage stage = new Stage();
 
-        //stage.initModality(Modality.APPLICATION_MODAL);
-        //stage.initStyle(StageStyle.TRANSPARENT);
+        stage.initModality(Modality.APPLICATION_MODAL);
+        stage.initStyle(StageStyle.TRANSPARENT);
         stage.setResizable(false);
         AnchorPane pane = new AnchorPane();
         File file = null;

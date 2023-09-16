@@ -52,7 +52,7 @@ public class DataBaseAccessLayer {
             ps.setString(1, player.getName());
             ps.setString(2, player.getPassword());
             ps.executeUpdate();
-            System.out.println("test");
+            //System.out.println("test");
             ps.close();
             return true;
 
@@ -62,58 +62,60 @@ public class DataBaseAccessLayer {
         }
 
     }
-   
 
-    
-    public boolean insertGame(String PlayerName,String OpponentName,String PlayerSymb,String OpponentSymb,String DateTime,String WinningSymb,boolean IsRecorded) {
+    public boolean insertGame(String PlayerName, String OpponentName, String PlayerSymb, String OpponentSymb, String DateTime, String WinningSymb, boolean IsRecorded) {
         try {
-            String insertQuery = "INSERT INTO GAME (PLAYERNAME, OPPONENTNAME, PLAYERSYMB , OPENNETSYMB,DATETIME,WINNINGSYMB,ISRECORDED) VALUES (?, ?, ?, ?,?,?,?)";
+            String insertQuery = "INSERT INTO GAME (PLAYERNAME, OPPONENTNAME, PLAYERSYMB , OPPONENTSYMB,DATETIME,WINNINGSYMB,ISRECORDED) VALUES (?, ?, ?, ?,?,?,?)";
             PreparedStatement ps = connection.prepareStatement(insertQuery);
 
-            
-                ps.setString(1, PlayerName);
-                ps.setString(2, OpponentName);
-                ps.setString(3, PlayerSymb);
-                ps.setString(4, OpponentSymb);
-                ps.setString(5, DateTime);
-                ps.setString(6, WinningSymb);
-                ps.setBoolean(7, IsRecorded);
-                ps.addBatch();
-            
+            ps.setString(1, PlayerName);
+            ps.setString(2, OpponentName);
+            ps.setString(3, PlayerSymb);
+            ps.setString(4, OpponentSymb);
+            ps.setString(5, DateTime);
+            ps.setString(6, WinningSymb);
+            ps.setBoolean(7, IsRecorded);
+            ps.addBatch();
 
             ps.executeBatch();
             ps.close();
+            System.out.println("game stored");
             return true;
         } catch (SQLException ex) {
-            //Logger.getLogger(DataBaseAccessLayer.class.getName()).log(Level.SEVERE, null, ex);
-            return false;
-        }
-    }
-    public boolean updatePlayerScore(String username, int newScore) {
-        try {
-            int score=selectPlayerScore(username);
-            if(score!=-1){
-            
-            score+=newScore;
-            String query = "UPDATE PLAYER SET SCORE = ? WHERE USERNAME = ?";
-            PreparedStatement ps = connection.prepareStatement(query);
-            ps.setInt(1, score);
-            ps.setString(2, username);
-            ps.executeUpdate();
-            ps.close();
-            return true;
-            }else{
-                return false;
-            }
-        } catch (SQLException ex) {
+            System.out.println("game not stored");
             Logger.getLogger(DataBaseAccessLayer.class.getName()).log(Level.SEVERE, null, ex);
             return false;
         }
     }
-    
+
+    public boolean updatePlayerScore(String username, int newScore) {
+        try {
+            int score = selectPlayerScore(username);
+            if (score != -1) {
+                System.out.println("socre - done");
+                score += newScore;
+                String query = "UPDATE PLAYER SET SCORE = ? WHERE USERNAME = ?";
+                PreparedStatement ps = connection.prepareStatement(query);
+                ps.setInt(1, score);
+                ps.setString(2, username);
+                ps.executeUpdate();
+                ps.close();
+                return true;
+            } else {
+                System.out.println("socre - error");
+                return false;
+            }
+        } catch (SQLException ex) {
+            System.out.println("socre - error");
+
+            Logger.getLogger(DataBaseAccessLayer.class.getName()).log(Level.SEVERE, null, ex);
+            return false;
+        }
+    }
+
     public int selectPlayerScore(String username) {
         try {
-           String query = "SELECT SCORE FROM PLAYER WHERE USERNAME = ?";
+            String query = "SELECT SCORE FROM PLAYER WHERE USERNAME = ?";
             PreparedStatement ps = connection.prepareStatement(query);
             ps.setString(1, username);
             ResultSet rs = ps.executeQuery();
@@ -128,11 +130,9 @@ public class DataBaseAccessLayer {
 
         }
     }
-    
-    
 
     public boolean signIn(String name, String pass) {
-        System.out.println(name + ":" + pass);
+        //System.out.println(name + ":" + pass);
         try {
 
             String insertQuery = "SELECT * FROM PLAYER WHERE USERNAME = ? AND PASSWORD = ?";
@@ -152,7 +152,7 @@ public class DataBaseAccessLayer {
             }
 
         } catch (SQLException ex) {
-            System.out.println("Not Found!!");
+            //System.out.println("Not Found!!");
             Logger
                     .getLogger(DataBaseAccessLayer.class
                             .getName()).log(Level.SEVERE, null, ex);
@@ -160,6 +160,7 @@ public class DataBaseAccessLayer {
         }
 
     }
+
     public List<Player> getOnlinePlayers() {
         List<Player> onlinePlayers = new ArrayList<>();
         try {
@@ -218,7 +219,7 @@ public class DataBaseAccessLayer {
 
         }
     }
-    
+
     public String getUsername(int token) {
         try {
             String query = "SELECT USERNAME FROM PLAYER WHERE TOKEN = ?";
@@ -236,12 +237,12 @@ public class DataBaseAccessLayer {
 
         }
     }
-    
-     //getCountOfInGamePlayers
+
+    //getCountOfInGamePlayers
     public List<Player> getIngamePlayers() {
         List<Player> inGamePlayers = new ArrayList<>();
         try {
-            String query = "SELECT * FROM PLAYER WHERE STATUS = 'Ingame'";
+            String query = "SELECT * FROM PLAYER WHERE STATUS = 'In-game'";
             PreparedStatement ps = connection.prepareStatement(query);
             ResultSet rs = ps.executeQuery();
 
@@ -253,7 +254,7 @@ public class DataBaseAccessLayer {
                 inGamePlayers.add(player);
 
             }
-            System.out.println("get players from dao:" + inGamePlayers.size());
+            //System.out.println("get players from dao:" + inGamePlayers.size());
             rs.close();
             ps.close();
 
@@ -264,22 +265,8 @@ public class DataBaseAccessLayer {
         return inGamePlayers;
 
     }
-    
-     public boolean updatePlayerScore(String username, int newScore) {
-        try {
-            String query = "UPDATE PLAYER SET SCORE = ? WHERE USERNAME = ?";
-            PreparedStatement ps = connection.prepareStatement(query);
-            ps.setInt(1, newScore);
-            ps.setString(2, username);
-            ps.executeUpdate();
-            ps.close();
-            return true;
-        } catch (SQLException ex) {
-            Logger.getLogger(DataBaseAccessLayer.class.getName()).log(Level.SEVERE, null, ex);
-            return false;
-        }
-    }
-     //getCountOfOfflinePlayers
+    //getCountOfOfflinePlayers
+
     public List<Player> getOfflinePlayers() {
         List<Player> offlinePlayers = new ArrayList<>();
         try {
@@ -295,7 +282,7 @@ public class DataBaseAccessLayer {
                 offlinePlayers.add(player);
 
             }
-            System.out.println("get players from dao:" + offlinePlayers.size());
+            //System.out.println("get players from dao:" + offlinePlayers.size());
             rs.close();
             ps.close();
 

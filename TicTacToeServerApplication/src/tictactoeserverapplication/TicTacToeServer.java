@@ -141,33 +141,51 @@ class ChatHandler {
                                 changeStatusOfPlayer(split[2], "In-game");
                                 break;
                             case "leave-game"://mohannad:accept-challenge:mohammed
+
+                                changeStatusOfPlayer(split[0], "Online");
+                                changeStatusOfPlayer(split[2], "Online");
                                 sendToClient(split[2], "leave:nothing");
+
                                 break;
                             case "store-game"://mohannad:store-game:playername:open:plsymb:opSymb:date:winningSymb:record
                                 //sendToClient(split[2], "accepted-invite:" + split[0]);
-                                DataBaseAccessLayer dao=new DataBaseAccessLayer();
+                                System.out.println("sotre-done");
+                                DataBaseAccessLayer dao = new DataBaseAccessLayer();
                                 boolean b = true;
-                                if(split[8].trim().equals("false")){
+                                if (split[8].trim().equals("false")) {
                                     b = false;
                                 }
+                                String winner = "";
+                                if (split[4].trim().equals(split[7])) {
+                                    winner = split[2];
+                                }
+                                if (split[5].trim().equals(split[7])) {
+                                    winner = split[3];
+                                }
+                                dao.updatePlayerScore(username, 5);
                                 dao.insertGame(split[2], split[3], split[4], split[5], split[6], split[7], b);
-                                
+                                dao.insertGame(split[3], split[2], split[5], split[4], split[6], split[7], b);
+
                                 break;
                             case "game-turn"://mohannad:game-turn:ahmed:1,2,X:1,2,X:1,2,X:1,2,X
                                 //game-turn:ali:0,0,X
-                                
+
                                 String req = "your-turn";
-                                for(int i=3;i<split.length;i++){
-                                    req+= ":"+split[i];//your-turn:1,2,X:1,2,X:1,2,X:1,2,X
+                                for (int i = 3; i < split.length; i++) {
+                                    req += ":" + split[i];//your-turn:1,2,X:1,2,X:1,2,X:1,2,X
                                 }
-                                System.out.println("game-turn => "+req);
-                                
+                                System.out.println("game-turn => " + req);
+
                                 sendToClient(split[2], req);
                                 break;
-                            case "add-point:":
-                               // DataBaseAccessLayer dao=new DataBaseAccessLayer();
-                                 new DataBaseAccessLayer().updatePlayerScore(username,5);
-                                 
+                            case "change-online":
+                                if(changeStatusOfPlayer(split[0], "Online")){
+                                    sendToClient(this, "changed:nothing");
+                                }else{
+                                    sendToClient(this, "not-changed:nothing");
+                                }
+                                break;
+
                         }
 
                     } catch (IOException ex) {
@@ -264,7 +282,6 @@ class ChatHandler {
     private boolean changeStatusOfPlayer(String username, String Status) {
         return new DataBaseAccessLayer().updatePlayerStatus(username, Status);
     }
-
 
     private int getPlayerToken(String username) {
         return new DataBaseAccessLayer().getToken(username);

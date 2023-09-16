@@ -62,9 +62,9 @@ public class ServerLayout extends BorderPane {
 
         // Creating PieChart
         ObservableList<PieChart.Data> pieChartData = FXCollections.observableArrayList(
-                new PieChart.Data("Offline", 0),
                 new PieChart.Data("Online", 0),
-                new PieChart.Data("InGame", 0));
+                new PieChart.Data("Offline", 0),
+                new PieChart.Data("In-Game", 0));
 
         pieChart = new PieChart(pieChartData);
 
