@@ -34,8 +34,11 @@ public class ClientSocket {
         //ProgressIndicatorClass.show();
         try {
             //sc = new Socket("192.168.1.3", 5000);
+
             sc = new Socket("10.175.240.234", 5000);
+
             //sc = new Socket("156.196.113.64", 5000);
+            sc = new Socket("10.175.240.234", 5000);
             ear = new DataInputStream(sc.getInputStream());
             mouth = new PrintStream(sc.getOutputStream());
             mouth.println(getUsername());

@@ -62,20 +62,24 @@ public class DataBaseAccessLayer {
         }
 
     }
+   
 
-    //Insert A list of players
-    public boolean insertPlayers(List<Player> players) {
+    
+    public boolean insertGame(String PlayerName,String OpponentName,String PlayerSymb,String OpponentSymb,String DateTime,String WinningSymb,boolean IsRecorded) {
         try {
-            String insertQuery = "INSERT INTO PLAYER (USERNAME, PASSWORD, SCORE , STATUS) VALUES (?, ?, ?, ?)";
+            String insertQuery = "INSERT INTO GAME (PLAYERNAME, OPPONENTNAME, PLAYERSYMB , OPENNETSYMB,DATETIME,WINNINGSYMB,ISRECORDED) VALUES (?, ?, ?, ?,?,?,?)";
             PreparedStatement ps = connection.prepareStatement(insertQuery);
 
-            for (Player player : players) {
-                ps.setString(1, player.getName());
-                ps.setString(2, player.getPassword());
-                ps.setInt(3, player.getScore());
-                ps.setString(4, player.getStatus());
+            
+                ps.setString(1, PlayerName);
+                ps.setString(2, OpponentName);
+                ps.setString(3, PlayerSymb);
+                ps.setString(4, OpponentSymb);
+                ps.setString(5, DateTime);
+                ps.setString(6, WinningSymb);
+                ps.setBoolean(7, IsRecorded);
                 ps.addBatch();
-            }
+            
 
             ps.executeBatch();
             ps.close();
@@ -85,6 +89,47 @@ public class DataBaseAccessLayer {
             return false;
         }
     }
+    public boolean updatePlayerScore(String username, int newScore) {
+        try {
+            int score=selectPlayerScore(username);
+            if(score!=-1){
+            
+            score+=newScore;
+            String query = "UPDATE PLAYER SET SCORE = ? WHERE USERNAME = ?";
+            PreparedStatement ps = connection.prepareStatement(query);
+            ps.setInt(1, score);
+            ps.setString(2, username);
+            ps.executeUpdate();
+            ps.close();
+            return true;
+            }else{
+                return false;
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(DataBaseAccessLayer.class.getName()).log(Level.SEVERE, null, ex);
+            return false;
+        }
+    }
+    
+    public int selectPlayerScore(String username) {
+        try {
+           String query = "SELECT SCORE FROM PLAYER WHERE USERNAME = ?";
+            PreparedStatement ps = connection.prepareStatement(query);
+            ps.setString(1, username);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getInt("SCORE");
+            } else {
+                return -1;
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(DataBaseAccessLayer.class.getName()).log(Level.SEVERE, null, ex);
+            return -1;
+
+        }
+    }
+    
+    
 
     public boolean signIn(String name, String pass) {
         System.out.println(name + ":" + pass);
