@@ -30,11 +30,13 @@ CREATE TABLE Game (
     Id INT GENERATED ALWAYS AS IDENTITY,
     PlayerName VARCHAR(50) NOT NULL,
     OpponentName VARCHAR(50) NOT NULL,
-    DateTime DATE NOT NULL,
-    GameResult VARCHAR(50) NOT NULL,
+    PlayerSymb VARCHAR(50) NOT NULL,
+    OpponentSymb VARCHAR(50) NOT NULL,
+    DateTime VARCHAR(50) NOT NULL,
+    WinningSymb VARCHAR(50) NOT NULL,
     IsRecorded BOOLEAN DEFAULT false,
     CONSTRAINT gamePK PRIMARY KEY (Id),
     CONSTRAINT playerNameFK FOREIGN KEY (PlayerName) REFERENCES Player(UserName),
-    CONSTRAINT OpponentNameFK FOREIGN KEY (OpponentName) REFERENCES Player(UserName),
+    CONSTRAINT OpponentNameFK FOREIGN KEY (OpponentName) REFERENCES Player(UserName)
 );
 
