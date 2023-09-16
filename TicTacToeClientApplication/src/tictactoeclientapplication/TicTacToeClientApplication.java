@@ -99,6 +99,9 @@ public class TicTacToeClientApplication extends Application implements OnNavigat
             case "local":
                 scene.setRoot(new GameBoardLayout(this, "local",""));
                 break;
+            case "online-game":
+                scene.setRoot(new GameBoardLayout(this, "online",game));
+                break;
             case "board":
                 scene.setRoot(new GameBoardLayout(this, "computer","no-name"));
                 break;

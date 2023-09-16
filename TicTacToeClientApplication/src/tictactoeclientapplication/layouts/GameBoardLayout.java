@@ -39,6 +39,7 @@ import javafx.concurrent.Task;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
+import tictactoeclientapplication.network.ClientSocket;
 
 public class GameBoardLayout extends BorderPane implements DialogClicks {
 
@@ -52,6 +53,9 @@ public class GameBoardLayout extends BorderPane implements DialogClicks {
     String playerName1;
     String playerName2;
     String winningSymbol;
+    String player1Symbol;
+    String player2Symbol;
+    String turnOf;
 
     ArrayList<Move> moves;
     String date;
@@ -76,6 +80,7 @@ public class GameBoardLayout extends BorderPane implements DialogClicks {
     }
 
     public GameBoardLayout(OnNavigation onNav, String typeOfGame, Game game) {
+
         this.typeOfGame = typeOfGame;
         this.onNav = onNav;
         this.gameData = game;
@@ -83,6 +88,8 @@ public class GameBoardLayout extends BorderPane implements DialogClicks {
     }
 
     void init() {
+
+        turnOf = "X";
         recordFlag = false;
 
         winningSymbol = "";
@@ -173,15 +180,23 @@ public class GameBoardLayout extends BorderPane implements DialogClicks {
         }
 
         if (typeOfGame.equals("computer")) {
+            player1Symbol = "X";
+            player2Symbol = "O";
             playerName1 = "Player";
             playerName2 = "Computer";
         } else if (typeOfGame.equals("local")) {
+
+            player1Symbol = "X";
+            player2Symbol = "O";
             playerName1 = "Player 1";
             playerName2 = "Player 2";
         } else if (typeOfGame.equals("view")) {
             backButton.setOnAction(e -> onNav.onNavClick("games", null));
-            playerName1 = gameData.getPlayer();
-            playerName2 = gameData.getOpponent();
+            player1Symbol = gameData.getPlayer().split("-")[1];
+            player2Symbol = gameData.getOpponent().split("-")[1];
+
+            playerName1 = gameData.getPlayer().split("-")[0];
+            playerName2 = gameData.getOpponent().split("-")[0];
             Task<Void> printingTask = new Task<Void>() {
                 @Override
                 protected Void call() throws Exception {
@@ -205,12 +220,71 @@ public class GameBoardLayout extends BorderPane implements DialogClicks {
 
             new Thread(printingTask).start();
 
-        } else {
+        } else if (typeOfGame.equals("online")) {
+            backButton.setOnAction(e -> {
+                //say to amother player that you leave the game
+                
+                
+                
+                onNav.onNavClick("online", null);
+            });
+            player1Symbol = gameData.getOpponent().split(":")[1].trim().equals("X") ? "O" : "X";
+            player2Symbol = gameData.getOpponent().split(":")[1].trim();
+            playerName1 = ClientSocket.getUsername();
+            playerName2 = gameData.getOpponent().split(":")[0];
             //online
+            if (!ClientSocket.getInstance().isConnected()) {
+                try {
+                    ClientSocket.getInstance().openConnection();
+                    System.out.println("GameBoardLayout: connected");
+                } catch (IOException ex) {
+                    System.out.println("GameBoardLayout: can't connect");
+                }
+            }
+            if (ClientSocket.getInstance().isConnected()) {
+                ClientSocket.getInstance().say("nothing", (msg) -> {
+                    System.out.println("GameBoardLayout: general msg => " + msg);
+                    String[] split = msg.split(":");
+                    if (split[0].trim().equals("your-turn")) {
+                        Platform.runLater(new Runnable() {
+                            @Override
+                            public void run() {
+                                Move move = new Move(String.valueOf(split[1].split(",")[0]), String.valueOf(split[1].split(",")[1]), split[1].split(",")[2]);
+                                moves.add(move);
+                                buttons[Integer.valueOf(move.getRow())][Integer.valueOf(move.getCol())].setText(move.getSymbol());
+                                if (move.getSymbol().trim().equals("X")) {
+                                    currentPlayer = 'O';
+                                    board[Integer.valueOf(move.getRow())][Integer.valueOf(move.getCol())] = 'X';
+                                } else {
+                                    currentPlayer = 'X';
+                                    board[Integer.valueOf(move.getRow())][Integer.valueOf(move.getCol())] = 'O';
+                                }
+                                if (isGameOver()) {
+                                    if (isWinningMove('X')) {
+                                        winningSymbol = "X";
+
+                                    } else if (isWinningMove('O')) {
+                                        winningSymbol = "O";
+                                    } else {
+                                        winningSymbol = "draw";
+                                    }
+                                    if (recordFlag) {
+                                        createFileToMoves();
+                                        addNewFileName();
+                                    }
+                                    displayGameOverMessage();
+                                }
+                            }
+                        });
+
+                    }
+
+                });
+            }
 
         }
-        player1.setText(playerName1);
-        player2.setText(playerName2);
+        player1.setText(playerName1 + "\n" + player1Symbol);
+        player2.setText(playerName2 + "\n" + player2Symbol);
     }
 
     private Button createButton(int row, int col) {
@@ -220,37 +294,124 @@ public class GameBoardLayout extends BorderPane implements DialogClicks {
         button.getStyleClass().add("PinkButton");
         if (!typeOfGame.equals("view")) {
             button.setOnAction(event -> {
+
                 if (button.getText().isEmpty()) {
-                    moves.add(new Move(String.valueOf(row), String.valueOf(col), String.valueOf(currentPlayer)));
-                    //count++;
-                    button.setText(String.valueOf(currentPlayer));
-                    board[row][col] = currentPlayer;
-                    currentPlayer = (currentPlayer == 'X') ? 'O' : 'X';
-                    if (!isGameOver()) {
-                        if (typeOfGame.equals("computer")) {
-                            //case computer
-                            makeAIMove();
+                    if (typeOfGame.trim().equals("online")) {
+                        if (!ClientSocket.getInstance().isConnected()) {
+                            try {
+                                ClientSocket.getInstance().openConnection();
+                                System.out.println("GameBoardLayout: connected");
+                            } catch (IOException ex) {
+                                System.out.println("GameBoardLayout: can't connect");
+                            }
                         }
-                        //local //handled
-                        //1 vs 1 --> todo
+                        if (ClientSocket.getInstance().isConnected()) {
+                            if (player1Symbol.equals(String.valueOf(currentPlayer))) {
+                                String currentMove = ":" + row + "," + col + "," + currentPlayer;
+                                buttons[row][col].setText(String.valueOf(currentPlayer));
+                                board[row][col] = currentPlayer;
+                                moves.add(new Move(String.valueOf(row), String.valueOf(col), String.valueOf(currentPlayer)));
+
+                                if (isGameOver()) {
+                                    if (isWinningMove('X')) {
+                                        winningSymbol = "X";
+                                        System.out.println("1-the winner is X");
+                                    } else if (isWinningMove('O')) {
+                                        winningSymbol = "O";
+                                        System.out.println("1-the winner is O");
+
+                                    } else {
+                                        winningSymbol = "draw";
+                                        System.out.println("1-no winner");
+                                    }
+                                    if (recordFlag) {
+                                        createFileToMoves();
+                                        addNewFileName();
+                                    }
+                                    displayGameOverMessage();
+                                }
+
+                                String req = "game-turn:" + gameData.getOpponent().split(":")[0];
+                                currentPlayer = (currentPlayer == 'X') ? 'O' : 'X';
+                                ClientSocket.getInstance().say(req + currentMove, (msg) -> {
+                                    System.out.println("createButton: general msg => " + msg);
+                                    String[] mSplit = msg.split(":");
+                                    if (mSplit[0].trim().equals("your-turn")) {
+                                        Platform.runLater(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                Move move = new Move(String.valueOf(mSplit[1].split(",")[0]), String.valueOf(mSplit[1].split(",")[1]), mSplit[1].split(",")[2]);
+                                                moves.add(move);
+                                                buttons[Integer.valueOf(move.getRow())][Integer.valueOf(move.getCol())].setText(move.getSymbol());
+                                                board[Integer.valueOf(move.getRow())][Integer.valueOf(move.getCol())] = move.getSymbol().equals("X") ? 'X' : 'O';
+                                                if (isGameOver()) {
+                                                    if (isWinningMove('X')) {
+                                                        winningSymbol = "X";
+                                                        System.out.println("2-the winner is X");
+
+                                                    } else if (isWinningMove('O')) {
+                                                        winningSymbol = "O";
+                                                        System.out.println("2-the winner is O");
+
+                                                    } else {
+                                                        winningSymbol = "draw";
+                                                        System.out.println("=2-no winner");
+
+                                                    }
+                                                    if (recordFlag) {
+                                                        createFileToMoves();
+                                                        addNewFileName();
+                                                    }
+                                                    displayGameOverMessage();
+                                                }
+                                                if (move.getSymbol().equals("X")) {
+                                                    currentPlayer = 'O';
+                                                    //board[row][col] = 'X';
+                                                } else {
+                                                    currentPlayer = 'X';
+                                                    //board[row][col] = 'O';
+                                                }
+
+                                            }
+                                        });
+
+                                    }
+                                });
+
+                            }
+                        }
+
                     } else {
-                        if (isWinningMove('X')) {
-                            winningSymbol = "X";
 
-                        } else if (isWinningMove('O')) {
-                            winningSymbol = "O";
+                        moves.add(new Move(String.valueOf(row), String.valueOf(col), String.valueOf(currentPlayer)));
+                        //count++;
+                        button.setText(String.valueOf(currentPlayer));
+                        board[row][col] = currentPlayer;
+                        currentPlayer = (currentPlayer == 'X') ? 'O' : 'X';
+                        if (!isGameOver()) {
+                            if (typeOfGame.equals("computer")) {
+                                makeAIMove();
+                            }
                         } else {
-                            winningSymbol = "draw";
-                        }
-                        if (recordFlag) {
-                            createFileToMoves();
-                            addNewFileName();
-                        }
+                            if (isWinningMove('X')) {
+                                winningSymbol = "X";
 
-                        displayGameOverMessage();
+                            } else if (isWinningMove('O')) {
+                                winningSymbol = "O";
+                            } else {
+                                winningSymbol = "draw";
+                            }
+                            if (recordFlag) {
+                                createFileToMoves();
+                                addNewFileName();
+                            }
 
+                            displayGameOverMessage();
+
+                        }
                     }
                 }
+
             });
         }
         return button;
@@ -303,7 +464,8 @@ public class GameBoardLayout extends BorderPane implements DialogClicks {
             while ((line = reader.readLine()) != null) {
                 fileContent.add(line);
             }
-            fileContent.add(date + ".txt" + ":" + player1.getText() + ":" + player2.getText() + ":" + winningSymbol);
+
+            fileContent.add(date + ".txt" + ":" + playerName1 + "-" + player1Symbol + ":" + playerName2 + "-" + player2Symbol + ":" + winningSymbol);
             fileWriter = new FileWriter("games.txt");
             writer = new BufferedWriter(fileWriter);
             for (String filenamestr : fileContent) {
@@ -316,7 +478,7 @@ public class GameBoardLayout extends BorderPane implements DialogClicks {
             try {
                 fileWriter = new FileWriter("games.txt");
                 writer = new BufferedWriter(fileWriter);
-                writer.write(date + ".txt" + ":" + player1.getText() + ":" + player2.getText() + ":" + winningSymbol);
+                writer.write(date + ".txt" + ":" + playerName1 + "-" + player1Symbol + ":" + playerName2 + "-" + player2Symbol + ":" + winningSymbol);
                 writer.newLine();
                 System.out.println("success:addNewFileName1");
 

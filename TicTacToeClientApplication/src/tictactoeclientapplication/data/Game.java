@@ -7,6 +7,10 @@ public class Game {
     String player,opponent,date,winnigSymbol;
     boolean isRecorded;
 
+    public Game(String opponent) {
+        this.opponent = opponent;
+    }
+    
     public Game(ArrayList<Move> moves, String player, String opponent, String date,boolean isRecorded,String winnigSymbol) {
         this.moves = moves;
         this.player = player;

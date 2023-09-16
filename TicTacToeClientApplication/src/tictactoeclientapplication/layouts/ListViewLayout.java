@@ -29,6 +29,7 @@ import javafx.scene.layout.StackPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import tictactoeclientapplication.data.Game;
 import tictactoeclientapplication.utils.OnNavigation;
 import tictactoeclientapplication.data.Player;
 import tictactoeclientapplication.layouts.listview.PlayerCellFactory;
@@ -43,8 +44,10 @@ public class ListViewLayout extends BorderPane {
     Button backButton;
     Button logoutButton;
     Thread th;
+    OnNavigation onNav;
 
     public ListViewLayout(OnNavigation onNav) {
+        this.onNav = onNav;
         playerList = FXCollections.observableArrayList();
         listView = new ListView<>(playerList);
         if (!ClientSocket.getInstance().isConnected()) {
@@ -81,33 +84,16 @@ public class ListViewLayout extends BorderPane {
                         System.out.println("ListViewLayout: invitation");
                         showDialog(split[1].trim());
 
+                    }else if (split[0].trim().equals("accepted-invite")) {
+                        System.out.println("ListViewLayout: acceptedinvitation");
+                        onNav.onNavClick("online-game", new Game(split[1]+":O"));
                     }
                 });
             });
             th.start();
-            //i gonna delete it/////////////////////////////////////////////////
-
-            /*ClientSocket.getInstance().say("get-players", (msg) -> {//get-players-success:ahmed
-                //System.out.println("ListViewLayout: general listening -> "+msg);
-                String[] split = msg.split(":");
-                if (split[0].trim().equals("get-players-success")) {
-                    System.out.println("ListViewLayout: " + msg);
-                    Platform.runLater(new Runnable() {
-                        @Override
-                        public void run() {
-                            playerList.clear();
-                            for (int i = 1; i < split.length; i++) {
-                                playerList.add(new Player(split[i], 50, "online"));
-                            }
-                        }
-                    });
-                } else if (split[0].equals("get-players-fail")) {
-                    System.out.println("ListViewLayout: no players found");
-                }
-            });*/
         }
         listView.setFocusTraversable(false);
-        listView.setCellFactory(new PlayerCellFactory(onNav));
+        listView.setCellFactory(new PlayerCellFactory(this.onNav));
         listView.setDisable(false);
         BorderPane.setAlignment(listView, javafx.geometry.Pos.CENTER);
         listView.setPrefHeight(200.0);
@@ -120,7 +106,7 @@ public class ListViewLayout extends BorderPane {
         backButton.setGraphic(view);
         backButton.setOnAction(e -> {
             //th.stop();
-            onNav.onNavClick("home",null);
+            this.onNav.onNavClick("home",null);
         });
         backButton.getStyleClass().addAll("RoundButton");
         backButton.setPrefSize(30, 30);
@@ -136,7 +122,7 @@ public class ListViewLayout extends BorderPane {
                 ClientSocket.getInstance().say("logout");
                 mouth = new FileOutputStream(file);
                 mouth.write(new String("logedout").getBytes());
-                onNav.onNavClick("login",null);
+                this.onNav.onNavClick("login",null);
             } catch (FileNotFoundException ex) {
                 System.out.println("ListViewLayout: file not found");
                 Logger.getLogger(LoginLayout.class.getName()).log(Level.SEVERE, null, ex);
@@ -196,6 +182,8 @@ public class ListViewLayout extends BorderPane {
                 new Dialog().displayTextDialog(new DialogClicks() {
                     @Override
                     public void onGreenBtnCkick() {
+                        ClientSocket.getInstance().say("accept-challenge:"+name);
+                        onNav.onNavClick("online-game", new Game(name+":X"));
                         System.out.println("accept");
                     }
 

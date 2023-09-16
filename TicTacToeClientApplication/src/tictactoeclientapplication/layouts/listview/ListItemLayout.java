@@ -21,6 +21,7 @@ import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import tictactoeclientapplication.data.Game;
 import tictactoeclientapplication.layouts.HomeLayout;
 import tictactoeclientapplication.layouts.ListViewLayout;
 import tictactoeclientapplication.layouts.LoginLayout;
@@ -34,9 +35,10 @@ public class ListItemLayout extends HBox {
     protected final Text statue;
     protected final Button challangeBtn;
     Thread th;
+    OnNavigation onNav;
 
     public ListItemLayout(Player player, OnNavigation onNav) {
-
+        this.onNav = onNav;
         playerName = new Text();
         statue = new Text();
         challangeBtn = new Button();
@@ -85,6 +87,9 @@ public class ListItemLayout extends HBox {
                         } else if (split[0].trim().equals("invite")) {//invite:ali
                             System.out.println("ListItemLayout: invitation");
                             showDialog(split[1].trim());
+                        } else if (split[0].trim().equals("accepted-invite")) {
+                            System.out.println("ListItemLayout: acceptedinvitation");
+                            onNav.onNavClick("online-game", new Game(split[1]+":O"));
                         }
                     });
                 });
@@ -115,6 +120,8 @@ public class ListItemLayout extends HBox {
                 new Dialog().displayTextDialog(new DialogClicks() {
                     @Override
                     public void onGreenBtnCkick() {
+                        ClientSocket.getInstance().say("accept-challenge:" + name);
+                        onNav.onNavClick("online-game", new Game(name+":X"));
                         System.out.println("accept");
                     }
 

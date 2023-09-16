@@ -138,6 +138,17 @@ class ChatHandler {
                             case "accept-challenge"://mohannad:accept-challenge:mohammed
                                 sendToClient(split[2], "accepted-invite:" + split[0]);
                                 break;
+                            case "game-turn"://mohannad:game-turn:ahmed:1,2,X:1,2,X:1,2,X:1,2,X
+                                //game-turn:ali:0,0,X
+                                
+                                String req = "your-turn";
+                                for(int i=3;i<split.length;i++){
+                                    req+= ":"+split[i];//your-turn:1,2,X:1,2,X:1,2,X:1,2,X
+                                }
+                                System.out.println("game-turn => "+req);
+                                
+                                sendToClient(split[2], req);
+                                break;
                         }
 
                     } catch (IOException ex) {
@@ -168,11 +179,11 @@ class ChatHandler {
     }
 
     void sendToClient(String username, String msg) {
-        System.out.println("username: " + username);
-        System.out.println("msg: " + msg);
+        //System.out.println("username: " + username);
+        //System.out.println("msg: " + msg);
 
         for (ChatHandler client : clients) {
-            System.out.println("send to: " + client.username);
+            //System.out.println("send to: " + client.username);
             if (client.username.trim().equals(username.trim())) {
                 System.out.println("sent");
                 client.mouth.println(msg);
@@ -199,7 +210,7 @@ class ChatHandler {
     void sendToAllClients(String msg) {
         System.out.println("num of clients on server: " + clients.size());
         for (ChatHandler client : clients) {
-            System.out.println(client.username);
+            //System.out.println(client.username);
             client.mouth.println(msg);
             client.mouth.flush();
         }
