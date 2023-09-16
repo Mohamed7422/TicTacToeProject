@@ -137,6 +137,11 @@ class ChatHandler {
                                 break;//order:username:data  
                             case "accept-challenge"://mohannad:accept-challenge:mohammed
                                 sendToClient(split[2], "accepted-invite:" + split[0]);
+                                changeStatusOfPlayer(split[0], "In-game");
+                                changeStatusOfPlayer(split[2], "In-game");
+                                break;
+                            case "leave-game"://mohannad:accept-challenge:mohammed
+                                sendToClient(split[2], "leave:nothing");
                                 break;
                             case "store-game"://mohannad:store-game:playername:open:plsymb:opSymb:date:winningSymb:record
                                 //sendToClient(split[2], "accepted-invite:" + split[0]);

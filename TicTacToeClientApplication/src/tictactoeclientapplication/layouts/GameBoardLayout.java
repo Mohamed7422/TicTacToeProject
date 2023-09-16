@@ -221,8 +221,14 @@ public class GameBoardLayout extends BorderPane implements DialogClicks {
             new Thread(printingTask).start();
 
         } else if (typeOfGame.equals("online")) {
+            player1Symbol = gameData.getOpponent().split(":")[1].trim().equals("X") ? "O" : "X";
+            player2Symbol = gameData.getOpponent().split(":")[1].trim();
+            playerName1 = ClientSocket.getUsername();
+            playerName2 = gameData.getOpponent().split(":")[0];
             backButton.setOnAction(e -> {
                 //say to amother player that you leave the game
+
+                ClientSocket.getInstance().say("leave-game:" + playerName2);
 
                 onNav.onNavClick("online", null);
             });
@@ -237,6 +243,9 @@ public class GameBoardLayout extends BorderPane implements DialogClicks {
                     System.out.println("GameBoardLayout: connected");
                 } catch (IOException ex) {
                     System.out.println("GameBoardLayout: can't connect");
+                    new Dialog().displayOneBtnDialog(this, "can't connect", "OK");
+                       
+
                 }
             }
             if (ClientSocket.getInstance().isConnected()) {
@@ -260,11 +269,22 @@ public class GameBoardLayout extends BorderPane implements DialogClicks {
                                 if (isGameOver()) {
                                     if (isWinningMove('X')) {
                                         winningSymbol = "X";
+                                        if (player1Symbol.trim().equals("X")) {
+                                            displayGameOverMessageOne("win");
+                                        } else {
+                                            displayGameOverMessageOne("lose");
+                                        }
 
                                     } else if (isWinningMove('O')) {
                                         winningSymbol = "O";
+                                        if (player1Symbol.trim().equals("O")) {
+                                            displayGameOverMessageOne("win");
+                                        } else {
+                                            displayGameOverMessageOne("lose");
+                                        }
                                     } else {
                                         winningSymbol = "draw";
+                                        displayGameOverMessageOne("draw");
                                     }
                                     if (recordFlag) {
                                         createFileToMoves();
@@ -287,9 +307,13 @@ public class GameBoardLayout extends BorderPane implements DialogClicks {
                                         }
 
                                     });
+
                                 }
                             }
                         });
+
+                    } else if (split[0].trim().equals("leave")) {
+                        onNav.onNavClick("online", null);
 
                     }
 
@@ -317,6 +341,7 @@ public class GameBoardLayout extends BorderPane implements DialogClicks {
                                 System.out.println("GameBoardLayout: connected");
                             } catch (IOException ex) {
                                 System.out.println("GameBoardLayout: can't connect");
+                                new Dialog().displayOneBtnDialog(this, "can't connect", "OK");
                             }
                         }
                         if (ClientSocket.getInstance().isConnected()) {
@@ -329,13 +354,24 @@ public class GameBoardLayout extends BorderPane implements DialogClicks {
                                 if (isGameOver()) {
                                     if (isWinningMove('X')) {
                                         winningSymbol = "X";
+                                        if (player1Symbol.trim().equals("X")) {
+                                            displayGameOverMessageOne("win");
+                                        } else {
+                                            displayGameOverMessageOne("lose");
+                                        }
                                         System.out.println("1-the winner is X");
                                     } else if (isWinningMove('O')) {
                                         winningSymbol = "O";
+                                        if (player1Symbol.trim().equals("O")) {
+                                            displayGameOverMessageOne("win");
+                                        } else {
+                                            displayGameOverMessageOne("lose");
+                                        }
                                         System.out.println("1-the winner is O");
 
                                     } else {
                                         winningSymbol = "draw";
+                                        displayGameOverMessageOne("draw");
                                         System.out.println("1-no winner");
                                     }
                                     if (recordFlag) {
@@ -359,6 +395,7 @@ public class GameBoardLayout extends BorderPane implements DialogClicks {
                                         }
 
                                     });
+
                                 }
 
                                 String req = "game-turn:" + gameData.getOpponent().split(":")[0];
@@ -377,22 +414,34 @@ public class GameBoardLayout extends BorderPane implements DialogClicks {
                                                 if (isGameOver()) {
                                                     if (isWinningMove('X')) {
                                                         winningSymbol = "X";
+                                                        if (player1Symbol.trim().equals("X")) {
+                                                            displayGameOverMessageOne("win");
+                                                        } else {
+                                                            displayGameOverMessageOne("lose");
+                                                        }
+
                                                         System.out.println("2-the winner is X");
 
                                                     } else if (isWinningMove('O')) {
                                                         winningSymbol = "O";
+                                                        if (player1Symbol.trim().equals("O")) {
+                                                            displayGameOverMessageOne("win");
+                                                        } else {
+                                                            displayGameOverMessageOne("lose");
+                                                        }
                                                         System.out.println("2-the winner is O");
 
                                                     } else {
                                                         winningSymbol = "draw";
                                                         System.out.println("=2-no winner");
+                                                        displayGameOverMessageOne("draw");
 
                                                     }
                                                     if (recordFlag) {
                                                         createFileToMoves();
                                                         addNewFileName();
                                                     }
-                                                    displayGameOverMessage();
+
                                                 }
                                                 if (move.getSymbol().equals("X")) {
                                                     currentPlayer = 'O';
@@ -405,6 +454,8 @@ public class GameBoardLayout extends BorderPane implements DialogClicks {
                                             }
                                         });
 
+                                    } else if (mSplit[0].trim().equals("leave")) {
+                                        onNav.onNavClick("online", null);
                                     }
                                 });
 
@@ -425,18 +476,19 @@ public class GameBoardLayout extends BorderPane implements DialogClicks {
                         } else {
                             if (isWinningMove('X')) {
                                 winningSymbol = "X";
+                                displayGameOverMessage("win");
 
                             } else if (isWinningMove('O')) {
                                 winningSymbol = "O";
+                                displayGameOverMessage("lose");
                             } else {
                                 winningSymbol = "draw";
+                                displayGameOverMessage("draw");
                             }
                             if (recordFlag) {
                                 createFileToMoves();
                                 addNewFileName();
                             }
-
-                            displayGameOverMessage();
 
                         }
                     }
@@ -556,19 +608,21 @@ public class GameBoardLayout extends BorderPane implements DialogClicks {
 
         if (isGameOver()) {
             if (isWinningMove('X')) {
+                displayGameOverMessage("win");
                 winningSymbol = "X";
-
             } else if (isWinningMove('O')) {
                 winningSymbol = "O";
+                displayGameOverMessage("lose");
             } else {
                 winningSymbol = "draw";
+                displayGameOverMessage("draw");
             }
 
             if (recordFlag) {
                 createFileToMoves();
                 addNewFileName();
             }
-            displayGameOverMessage();
+
         }
     }
 
@@ -710,10 +764,27 @@ public class GameBoardLayout extends BorderPane implements DialogClicks {
         return 0;
     }
 
-    private void displayGameOverMessage() {
+    private void displayGameOverMessage(String status) {
         //String message = "Game Over!";
         //Open Dialog
-        new Dialog().displayWinDialog(this, "lose");
+        new Dialog().displayVideoDialog(this, status);
+
+    }
+    
+    private void displayGameOverMessageOne(String status) {
+        //String message = "Game Over!";
+        //Open Dialog
+        new Dialog().displayVideoDialogOneBtn(new DialogClicks(){
+            @Override
+            public void onGreenBtnCkick() {
+                onNav.onNavClick("online", null);
+            }
+
+            @Override
+            public void onRedBtnCkick() {
+            }
+        
+        }, status);
 
     }
 
