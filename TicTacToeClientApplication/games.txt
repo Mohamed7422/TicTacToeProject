@@ -1,3 +1,0 @@
-20230916-004529.txt:Player-X:Computer-O:X
-20230916-004547.txt:Player 1-X:Player 2-O:O
-20230916-004657.txt:ali-X:ahmed-O:X

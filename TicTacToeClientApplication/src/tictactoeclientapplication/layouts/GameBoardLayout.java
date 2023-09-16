@@ -223,9 +223,7 @@ public class GameBoardLayout extends BorderPane implements DialogClicks {
         } else if (typeOfGame.equals("online")) {
             backButton.setOnAction(e -> {
                 //say to amother player that you leave the game
-                
-                
-                
+
                 onNav.onNavClick("online", null);
             });
             player1Symbol = gameData.getOpponent().split(":")[1].trim().equals("X") ? "O" : "X";
@@ -273,6 +271,22 @@ public class GameBoardLayout extends BorderPane implements DialogClicks {
                                         addNewFileName();
                                     }
                                     displayGameOverMessage();
+                                    String req = "store-game:" + playerName1 + ":" + playerName2 + ":" + player1Symbol + ":" + player2Symbol + ":" + data + ":" + winningSymbol + ":" + recordFlag;
+                                    ClientSocket.getInstance().say("req", (msg) -> {
+                                        String[] split = msg.split(":");
+                                        String winning = split[6];
+                                        String playerName1 = split[1];
+                                        String playerName2 = split[2];
+                                        if (winningSymbol.equals(playerName1)) {
+                                            ClientSocket.getInstance().say("add-point:" + playerName1);
+                                            //updatePlayerScore(playerName1,5);
+                                        } else if (winningSymbol.equals(playerName2)) {
+                                            ClientSocket.getInstance().say("add-point:" + playerName2);
+
+                                            // updatePlayerScore();
+                                        }
+
+                                    });
                                 }
                             }
                         });
@@ -329,6 +343,22 @@ public class GameBoardLayout extends BorderPane implements DialogClicks {
                                         addNewFileName();
                                     }
                                     displayGameOverMessage();
+                                    String req = "store-game:" + playerName1 + ":" + playerName2 + ":" + player1Symbol + ":" + player2Symbol + ":" + data + ":" + winningSymbol + ":" + recordFlag;
+                                    ClientSocket.getInstance().say("req", (msg) -> {
+                                        String[] split = msg.split(":");
+                                        String winning = split[6];
+                                        String playerName1 = split[1];
+                                        String playerName2 = split[2];
+                                         if (winningSymbol.equals(playerName1)) {
+                                            ClientSocket.getInstance().say("add-point:" + playerName1);
+                                            //updatePlayerScore(playerName1,5);
+                                        } else if (winningSymbol.equals(playerName2)) {
+                                            ClientSocket.getInstance().say("add-point:" + playerName2);
+
+                                            // updatePlayerScore();
+                                        }
+
+                                    });
                                 }
 
                                 String req = "game-turn:" + gameData.getOpponent().split(":")[0];

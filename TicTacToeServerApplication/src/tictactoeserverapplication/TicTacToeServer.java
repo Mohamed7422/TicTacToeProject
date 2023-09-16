@@ -138,6 +138,16 @@ class ChatHandler {
                             case "accept-challenge"://mohannad:accept-challenge:mohammed
                                 sendToClient(split[2], "accepted-invite:" + split[0]);
                                 break;
+                            case "store-game"://mohannad:store-game:playername:open:plsymb:opSymb:date:winningSymb:record
+                                //sendToClient(split[2], "accepted-invite:" + split[0]);
+                                DataBaseAccessLayer dao=new DataBaseAccessLayer();
+                                boolean b = true;
+                                if(split[8].trim().equals("false")){
+                                    b = false;
+                                }
+                                dao.insertGame(split[2], split[3], split[4], split[5], split[6], split[7], b);
+                                
+                                break;
                             case "game-turn"://mohannad:game-turn:ahmed:1,2,X:1,2,X:1,2,X:1,2,X
                                 //game-turn:ali:0,0,X
                                 
@@ -149,6 +159,10 @@ class ChatHandler {
                                 
                                 sendToClient(split[2], req);
                                 break;
+                            case "add-point:":
+                               // DataBaseAccessLayer dao=new DataBaseAccessLayer();
+                                 new DataBaseAccessLayer().updatePlayerScore(username,5);
+                                 
                         }
 
                     } catch (IOException ex) {
