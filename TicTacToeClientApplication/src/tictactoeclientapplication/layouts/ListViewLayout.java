@@ -37,7 +37,7 @@ import tictactoeclientapplication.network.ClientSocket;
 import tictactoeclientapplication.utils.Dialog;
 import tictactoeclientapplication.utils.DialogClicks;
 
-public class ListViewLayout extends BorderPane {
+public class ListViewLayout extends BorderPane implements DialogClicks{
 
     static ListView listView;
     static ObservableList<Player> playerList;
@@ -126,12 +126,16 @@ public class ListViewLayout extends BorderPane {
                 Logger.getLogger(LoginLayout.class.getName()).log(Level.SEVERE, null, ex);
             } catch (IOException ex) {
                 System.out.println("ListViewLayout: IOException");
+                new Dialog().displayOneBtnDialog(this, "Connect to internet", "OK");
+
             } finally {
                 try {
                     //th.stop();
-                    mouth.close();
+                     mouth.close();
+                    
                 } catch (IOException ex) {
                     System.out.println("ListViewLayout: IOException");
+                    new Dialog().displayOneBtnDialog(this, "Connect to internet", "OK");
                 }
             }
         });
@@ -194,4 +198,13 @@ public class ListViewLayout extends BorderPane {
             }
         });
     }
+
+    @Override
+    public void onGreenBtnCkick() {
+     }
+
+    @Override
+    public void onRedBtnCkick() {
+        onNav.onNavClick("login", null);
+     }
 }
